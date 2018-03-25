@@ -12,17 +12,30 @@ use think\Model;
 
 class Fav extends Base {
 
+    protected $updatetime = false;
+
     /**
-     * 根据ID获取联系人
-     * @return false|\PDOStatement|string|\think\Collection
+     * get favors by contact id
      */
-    public function getAllContactInIds($ids) {
-        $where = ['status'=>['NEQ',config('code.status_delete')]];
-        if (empty($ids)) {
+    public function getByCid($cid) {
+        if (empty($cid)) {
             exception('参数异常！获取信息失败！');
         }
-        $where['id'] = ['IN',$ids];
-        $contacts = $this->field('id,nickname,phone,company,address,img1')->where($where)->select();
-        return $contacts;
+        $where['cid'] = ['EQ',$cid];
+        $favors = $this->where($where)->order('create_time','DESC')->select();
+        return $favors;
+    }
+
+    /**
+     * get favors by open-contact id and contact id
+     */
+    public function getByCidFavid($cid, $favid) {
+        if (empty($cid) || empty($favid)) {
+            exception('参数异常！获取信息失败！');
+        }
+        $where['cid'] = ['EQ',$cid];
+        $where['favcid'] = ['EQ',$favid];
+        $favor = $this->get($where);
+        return $favor;
     }
 }

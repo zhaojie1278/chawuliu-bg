@@ -56,13 +56,15 @@ class Contact extends Base {
      * 根据ID获取联系人
      * @return false|\PDOStatement|string|\think\Collection
      */
-    public function getAllContactInIds($ids) {
-        $where = ['status'=>['NEQ',config('code.status_delete')]];
+    public function getAllContactInIds($ids, $whereCond = []) {
         if (empty($ids)) {
             exception('参数异常！获取信息失败！');
         }
-        $where['id'] = ['IN',$ids];
-        $contacts = $this->field('id,nickname,phone,company,address,img1')->where($where)->select();
+        if (empty($whereCond)) {
+            $whereCond = ['status'=>['NEQ',config('code.status_delete')]];
+        }
+        $whereCond['id'] = ['IN',$ids];
+        $contacts = $this->field('id,nickname,phone,company,address,img1,img2,img3,img4')->where($whereCond)->select();
         return $contacts;
     }
 
@@ -112,7 +114,26 @@ class Contact extends Base {
             $ct->domainimg2 = $ct->img2 ? request()->domain().$ct->img2 : '';
             $ct->domainimg3 = $ct->img3 ? request()->domain().$ct->img3 : '';
             $ct->domainimg4 = $ct->img4 ? request()->domain().$ct->img4 : '';
+            $image = $this->getShowImg($ct);
+            $ct->image = $image ? request()->domain().$image : '';
         }
         return $ct;
+    }
+
+    /**
+     * 获取展示的图片
+     */
+    public function getShowImg($contact) {
+        $img = '';
+        if (!empty($contact->img1)) {
+            $img = $contact->img1;
+        } else if (!empty($contact->img2)) {
+            $img =  $contact->img2;
+        } else if (!empty($contact->img3)) {
+            $img =  $contact->img3;
+        } else if (!empty($contact->img4)) {
+            $img =  $contact->img4;
+        }
+        return $img;
     }
 }

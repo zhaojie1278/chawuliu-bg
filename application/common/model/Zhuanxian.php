@@ -44,8 +44,9 @@ class Zhuanxian extends Base {
      */
     public function getById($id, $whereCond = []) {
         if (empty($whereCond)) {
-            $whereCond = ['status'=>['NEQ',config('code.status_delete')],'id'=>$id];
+            $whereCond = ['status'=>['NEQ',config('code.status_delete')]];
         }
+        $whereCond['id'] = $id;
         return $this->get($whereCond);
     }
 
@@ -107,7 +108,8 @@ class Zhuanxian extends Base {
             $cids[] = $zx->cid;
         }
         $cids = array_unique($cids);
-        $contacts = model('contact')->getAllContactInIds($cids);
+        $where['status'] = config('code.status_normal');
+        $contacts = model('contact')->getAllContactInIds($cids, $where);
 
         if (empty($contacts)) {
             $contactNames = [];
@@ -119,6 +121,7 @@ class Zhuanxian extends Base {
 
         $resultData = [];
         foreach ($zhuanxians as $zx) {
+            $image = !empty($contactNames[$zx->cid]) ? model('contact')->getShowImg($contactNames[$zx->cid]) : '';
             $resultData[] = [
                 'id' => $zx['id'],
                 'start' => $zx['start'],
@@ -131,7 +134,7 @@ class Zhuanxian extends Base {
                 // 'nickname' => !empty($contactNames[$zx->cid]) ? $contactNames[$zx->cid]->nickname : '',
                 // 'phone' => !empty($contactNames[$zx->cid]) ? $contactNames[$zx->cid]->phone : '',
                 // 'address' => !empty($contactNames[$zx->cid]) ? $contactNames[$zx->cid]->address : '',
-                'image' => !empty($contactNames[$zx->cid]) ? request()->domain().$contactNames[$zx->cid]->img1 : '',
+                'image' => $image ? request()->domain().$image : '',
             ];
         }
         return $resultData;

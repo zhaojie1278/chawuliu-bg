@@ -27,11 +27,16 @@ Route::post('api/:ver/zhuanxian/add','api/:ver.zhuanxian/add');
 Route::get('api/:ver/zhuanxian/:id','api/:ver.zhuanxian/detail');
 
 // 用户
-Route::get('api/:ver/contact/:id','api/:ver.contact/detail'); // 详情
+// Route::get('api/:ver/contact','api/:ver.contact/detail'); // 详情
+Route::post('api/:ver/contact/favcompany','api/:ver.contact/favcompany'); // 收藏公司信息
 Route::post('api/:ver/contact/isregcompany','api/:ver.contact/detailbyopenid'); // 详情
 Route::post('api/:ver/contact/companyinfo','api/:ver.contact/detailbyopenid'); // 详情
 Route::post('api/:ver/contact/addcompany','api/:ver.contact/addcompany'); // 添加公司信息
-Route::post('api/:ver/contact/updatecompany','api/:ver.contact/updatecompany'); // 添加公司信息
+Route::post('api/:ver/contact/updatecompany','api/:ver.contact/updatecompany'); // 修改公司信息
+Route::post('api/:ver/contact','api/:ver.contact/detail'); // 详情
+
+// 收藏
+Route::post('api/:ver/fav/getfavors','api/:ver.fav/getFavorsByCid'); // 获取收藏
 
 // OPENID 获取
 Route::post('api/getopenid','api/waferauth/getopenid');

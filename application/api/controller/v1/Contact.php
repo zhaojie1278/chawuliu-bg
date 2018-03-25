@@ -17,28 +17,39 @@ class Contact extends Common {
     /**
      * 根据专线ID获取详细信息
      */
-    public function detail($id) {
-        if (empty($id)) {
-            return show(config('code.error'), 'id not send', [], 400);
+    public function detail() {
+        $data = input('post.');
+        if (empty($data['cid']) || empty($data['openid'])) {
+            return show(config('code.error'), 'sorry, param error', [], 400);
         }
+        
         $whereCond = ['status'=>['EQ',config('code.status_normal')]];
         
         try {
-            $contact = model('contact')->getById($id, $whereCond);
+            $detailContact = model('contact')->getById($data['cid'], $whereCond);
+            $openidContact = model('contact')->getByOpenid($data['openid'], $whereCond);
         } catch(\Exception $e) {
-            return show(config('code.error'), 'openid get user is empty.', [], 500);
+            return show(config('code.error'), 'id get user is empty.', [], 500);
         }
 
-        if (!empty($contact)) {
-            $contact = model('contact')->getRealContact($contact);
-            $zhuanxians = model('zhuanxian')->getZhuanxiansByCid($id);
+        if (!empty($detailContact)) {
+            $detailContact = model('contact')->getRealContact($detailContact);
+            $zhuanxians = model('zhuanxian')->getZhuanxiansByCid($data['cid']);
             // dump($zhuanxians);
             if (!empty($zhuanxians)) {
-                $contact->zhuanxians = array_chunk($zhuanxians, 2);
+                $detailContact->zhuanxians = array_chunk($zhuanxians, 2);
             } else {
-                $contact->zhuanxians = array();
+                $detailContact->zhuanxians = array();
             }
-            return show(config('code.success'), 'OK', $contact, 200);
+            // 获取收藏的物流公司
+            // $openid
+
+            $isfav = false;
+            if (!empty($openidContact)) {
+                $isfav = model('fav')->getByCidFavid($openidContact->id, $detailContact->id);
+            }
+            $detailContact->isfav = $isfav ? true : false;
+            return show(config('code.success'), 'OK', $detailContact, 200);
         } else {
             return show(config('code.error'), 'User is not exist.', [], 401);
         }
@@ -145,5 +156,53 @@ class Contact extends Common {
         }
         $data = ['newid'=>$rs];
         return show(config('code.success'), 'OK', $data, 200);
+    }
+
+    /**
+     * 修改公司信息
+     */
+    public function favCompany() {
+        $data = input('post.');
+        // halt($data);
+        if (empty($data['cid']) || !isset($data['isfav']) || empty($data['openid'])) {
+            return show(config('code.error'), '参数错误.', [], 400);
+        }
+
+        try {
+            $isfav = $data['isfav'];
+            // 收藏
+            // 判断ID是否存在
+            $whereCond = ['status'=>['EQ',config('code.status_normal')]];
+            $openidContact = model('contact')->getByOpenid($data['openid'], $whereCond);
+            if (!$openidContact) {
+                return show(config('code.error'), '用户不存在，收藏失败', [], 400);
+            }
+
+            // 要收藏的物流公司ID
+            $cid = $data['cid'];
+
+            if ($isfav) {
+                // 取消收藏
+                $isfav = model('fav')->getByCidFavid($openidContact->id, $cid);
+                if ($isfav) {
+                    $delData = ['id' => $isfav->id];
+                    $rs = model('fav')->del($delData, true);
+                } else {
+                    $rs = true;
+                }
+            } else {
+                $saveData = [
+                    'cid' => $openidContact->id,
+                    'favcid' => $cid
+                ];
+                $rs = model('fav')->add($saveData);
+            }
+        } catch(\Exceptioin $e) {
+            return show(config('code.error'), $e->getMessage(), [], 500);
+        }
+        if (!$rs) {
+            return show(config('code.error'), '抱歉，系统异常，添加失败，请稍后重试', [], 400);            
+        }
+        return show(config('code.success'), 'OK', ['isfav'=>$isfav], 200);
     }
 }

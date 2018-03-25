@@ -7,3 +7,11 @@
 // 如果提交表单中有 id 值
 $this->save();
 $this->id; // 获取不到值
+
+
+// PHP 数组函数
+https://www.cnblogs.com/Steven-shi/p/5897745.html
+
+
+// PHP函数的实现原理及性能分析
+https://www.cnblogs.com/ghj1976/archive/2010/08/27/1809766.html
