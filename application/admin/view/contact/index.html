@@ -1,0 +1,162 @@
+<{include file='public/_meta'}>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 专线管理 <span class="c-gray en">&gt;</span> 专线列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c">
+        <form id="form-admin-search" action="<{:url('contact/index')}>" method="post">
+            <!--<button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button>-->
+            添加日期范围：
+            <input name="starttime" type="text" onfocus="WdatePicker({})" id="logmin" class="input-text Wdate" style="width:120px;" value="<{$condition['starttime'] ?? ''}>">
+            -
+            <input name="endtime" type="text" onfocus="WdatePicker({})" id="logmax" class="input-text Wdate" style="width:120px;" value="<{$condition['endtime'] ?? ''}>">
+            <input type="text" name="nickname" id="" placeholder=" 联系人" style="width:100px" class="input-text" value="<{$condition['nickname'] ?? ''}>">
+            <input type="text" name="company" id="" placeholder=" 公司名称" style="width:100px" class="input-text" value="<{$condition['company'] ?? ''}>">
+            <button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜</button>
+        </form>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="article_batch_del()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加" data-href="<{:url('contact/add')}>" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加</a></span> <span class="r">共有数据：<strong id="total_count"><{$contacts|count}></strong> 条</span> </div>
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+            <thead>
+            <tr class="text-c">
+                <th width="25"><input type="checkbox" name="" value=""></th>
+                <th width="150">联系人</th>
+                <th width="150">公司名称</th>
+                <th width="150">手机号码</th>
+                <th width="150">公司地址</th>
+                <th width="80">公司图片1</th>
+                <th width="80">公司图片2</th>
+                <th width="80">公司图片3</th>
+                <th width="80">公司图片4</th>
+                <th width="120">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{volist name='contacts' id='vo'}>
+            <tr class="text-c">
+                <td><input type="checkbox" value="<{$vo.id}>" name="ids"></td>
+                <td><{$vo.nickname}></td>
+                <td><{$vo.company}></td>
+                <td><{$vo.phone}></td>
+                <td><{$vo.address}></td>
+                <td>
+                    <{if condition="empty($vo.img1)"}>
+                    无
+                    <{else /}>
+                    <img id="upload_img1" src="<{$vo.img1}>" width="80"/>
+                    <{/if}>
+                </td>
+                <td>
+                    <{if condition="empty($vo.img2)"}>
+                    无
+                    <{else /}>
+                    <img id="upload_img2" src="<{$vo.img2}>" width="80"/>
+                    <{/if}>
+                </td>
+                <td>
+                    <{if condition="empty($vo.img3)"}>
+                    无
+                    <{else /}>
+                    <img id="upload_img3" src="<{$vo.img3}>" width="80"/>
+                    <{/if}>
+                </td>
+                <td>
+                    <{if condition="empty($vo.img4)"}>
+                    无
+                    <{else /}>
+                    <img id="upload_img4" src="<{$vo.img4}>" width="80"/>
+                    <{/if}>
+                </td>
+                <td class="f-14 td-manage"><a style="text-decoration:none" class="ml-5" onClick="article_edit('编辑','<{:url(\'contact/edit\')}>',<{$vo.id}>)" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'<{$vo.id}>')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+            </tr>
+            <{/volist}>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<{include file='public/_footer'}>
+<script type="text/javascript" src="__STATIC__/hadmin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="__STATIC__/hadmin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="__STATIC__/hadmin/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+    $('.table-sort').dataTable({
+        "aaSorting": [[ 6, "desc" ]],//默认第几个排序
+        "bStateSave": false,//状态保存
+        "pading":false,
+        "aoColumnDefs": [
+            //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+            {"orderable":false,"aTargets":[0,1,2,7]}// 不参与排序的列
+        ]
+    });
+    /*编辑*/
+    function article_edit(title,url,id,w,h){
+        layer_show(title,url+'?id='+id,w,h);
+    }
+    /*删除*/
+    function article_del(obj,id){
+        layer.confirm('确认要删除吗？',function(index){
+            $.ajax({
+                type: 'POST',
+                url: "<{:url('contact/del')}>",
+                data:{id:id},
+                dataType: 'json',
+                success: function(data){
+                    if (data.code == '0') {
+                        $(obj).parents("tr").remove();
+                        layer.msg('已删除!',{icon:1,time:1000});
+                        var total_count = $('#total_count').html();
+                        total_count = Number(total_count) - 1;
+                        $('#total_count').html(total_count)
+                    } else {
+                        layer.msg('删除失败，'+data.msg+'！',{icon:5,time:2000});
+                    }
+                },
+                error:function(data) {
+                    layer.msg('请求失败!',{icon:5,time:1000});
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+
+    /*批量删除*/
+    function article_batch_del(obj,id){
+        var ids = new Array();
+        $("input[name='ids']:checked").each(function(){
+            ids.push($(this).val());
+        });
+        console.log(ids.length);
+        console.log(ids);
+        if(ids.length<1) {
+            layer.msg('至少选择一个');
+        } else {
+            layer.confirm('确认要删除吗？', function (index) {
+                $.ajax({
+                    type: 'POST',
+                    url: "<{:url('contact/del')}>",
+                    data: {ids: ids},
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.code == '0') {
+                            $("input[name='ids']:checked").parents("tr").remove();
+                            layer.msg('已删除!', {icon: 1, time: 1000});
+                            var total_count = $('#total_count').html();
+                            total_count = Number(total_count) - ids.length;
+                            $('#total_count').html(total_count)
+                        } else {
+                            layer.msg('删除失败，' + data.msg + '！', {icon: 5, time: 2000});
+                        }
+                    },
+                    error: function (data) {
+                        layer.msg('请求失败!', {icon: 5, time: 1000});
+                        console.log(data.code);
+                    },
+                });
+            });
+        }
+    }
+
+</script>
+</body>
+
+</html>

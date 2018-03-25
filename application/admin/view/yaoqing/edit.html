@@ -1,0 +1,50 @@
+<{include file='public/_meta'}>
+<article class="page-container">
+    <form class="form form-horizontal" id="form-admin-add" action="<{:url('yaoqing/edit')}>" method="post">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="c-red">*</span>联系人：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="input-text"><{$ent->nickname}></span>
+                <input type="hidden" name="id" value="<{$ent.id}>"/>
+                <input type="hidden" name="uid" value="<{$ent.uid}>"/>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="c-red">*</span>邀请人：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                <input type="hidden" name="iv_nickname" id="iv_nickname" value="<{$ent.iv_nickname}>"/>
+				<select name="iv_uid" id="iv_uid" class="select">
+                    <option value="0">无邀请</option>
+                    <{volist name='$contacts' id='vo'}>
+                    <option value="<{$vo.id}>" <{eq name='$vo.id' value='$ent->iv_uid'}>selected='selected'<{/eq}>><{$vo.nickname}></option>
+                    <{/volist}>
+                </select>
+				</span> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                注册时间：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="input-text"><{$ent->create_time}></span>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+</article>
+<{include file='public/_footer'}>
+<script>
+    $(function(){
+        $('#iv_uid').change(function(){
+            $('#iv_nickname').val($(this).find('option:selected').text());
+        });
+    });
+</script>
+</body>
+
+</html>

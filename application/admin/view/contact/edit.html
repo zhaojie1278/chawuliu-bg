@@ -1,0 +1,94 @@
+<{include file='public/_meta' /}>
+<link rel="stylesheet" type="text/css" href="__STATIC__/admin/uploadify/uploadify.css" />
+<article class="page-container">
+    <form class="form form-horizontal" id="form-admin-add" action="<{:url('contact/edit')}>" method="post">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="c-red">*</span>联系人：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off" value="<{$ent->nickname}>" placeholder="" id="nickname" name="nickname">
+                <input type="hidden" name="id" value="<{$ent.id}>"/>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="c-red">*</span>公司名称：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off" placeholder="" id="company" name="company" value="<{$ent->company}>">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="c-red">*</span>手机号码：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off" placeholder="" id="phone" name="phone" value="<{$ent->phone}>">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="c-red">*</span>公司地址：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off" placeholder="" id="address" name="address" value="<{$ent->address}>">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                公司图片1：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="file" id="file_upload1"/>
+                <img style="display:block;" id="upload_img1" src="<{$ent->img1}>" width="150"/>
+                <input type="hidden" id="file_upload_img1" name="img1" value="<{$ent->img1}>"/>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                公司图片2：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="file" id="file_upload2"/>
+                <img style="display:block;" id="upload_img2" src="<{$ent->img2}>" width="150"/>
+                <input type="hidden" id="file_upload_img2" name="img2" value="<{$ent->img2}>"/>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                公司图片3：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="file" id="file_upload3"/>
+                <img style="display:block;" id="upload_img3" src="<{$ent->img3}>" width="150"/>
+                <input type="hidden" id="file_upload_img3" name="img3" value="<{$ent->img3}>"/>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                公司图片4：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="file" id="file_upload4"/>
+                <img style="display:block;" id="upload_img4" src="<{$ent->img4}>" width="150"/>
+                <input type="hidden" id="file_upload_img4" name="img4" value="<{$ent->img4}>"/>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                邀请人：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select name="iv_uid" id="cid" class="select">
+                    <option value="0">请选择</option>
+                    <{volist name='contacts' id='vo'}>
+                    <option value="<{$vo.id}>" <{eq name='$vo.id' value='$ent->iv_uid'}>selected='selected'<{/eq}>><{$vo.nickname}></option>
+                    <{/volist}>
+                </select>
+				</span> </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+</article>
+<{include file='public/_footer' /}>
+<{load href="__STATIC__/admin/uploadify/jquery.uploadify.min.js" /}>
+<{load href="__STATIC__/admin/js/image.js" /}>
+</body>
+
+</html>
