@@ -54,23 +54,31 @@ class Zhuanxian extends Base {
     /**
      * API获取推荐专线数量
      */
-    public function getTuiZhuanxianCount() {
+    public function getTuiZhuanxianCount($condition = []) {
         $where = [
             'status'=>config('code.status_normal'),
             'isrecommend'=>config('code.recommend')
         ];
+        if ($condition) {
+            $where = array_merge($where, $condition);
+        }
         return $this->where($where)->count();
     }
     /**
      * API获取推荐专线
      */
-    public function getTuiZhuanxians($from = 0, $size = 10) {
+    public function getTuiZhuanxians($condition = [], $from = 0, $size = 10) {
         $where = [
             'status'=>config('code.status_normal'),
             'isrecommend'=>config('code.recommend')
         ];
+        
+        if ($condition) {
+            $where = array_merge($where, $condition);
+        }
         $order = ['create_time'=>'DESC'];
-        $zhuanxians = $this->field('id,start,point,cid,nickname,phone,address')->where($where)->group('cid')->order($order)->limit($from, $size)->select();
+        // $zhuanxians = $this->field('id,start,point,cid,nickname,phone,address')->where($where)->group('cid')->order($order)->limit($from, $size)->select();
+        $zhuanxians = $this->field('id,start,point,cid,nickname,phone,address')->where($where)->order($order)->select();
         // echo $this->getLastSql();
         $realZhuanxians = $this->getRealZhuanxians($zhuanxians);
         return $realZhuanxians;
@@ -90,7 +98,9 @@ class Zhuanxian extends Base {
     public function getZhuanxiansByPage($condition = [], $from = 0, $size = 10) {
         $order = ['create_time'=>'DESC'];
         // echo $this->getLastSql();
-        $zhuanxians = $this->field('id,start,point,cid,nickname,phone,address')->where($condition)->order($order)->limit($from, $size)->select();
+        // $zhuanxians = $this->field('id,start,point,cid,nickname,phone,address')->where($condition)->order($order)->limit($from, $size)->select();
+        $zhuanxians = $this->field('id,start,point,cid,nickname,phone,address')->where($condition)->order($order)->select();
+        // echo $this->getLastSql();
         $realZhuanxians = $this->getRealZhuanxians($zhuanxians);
         return $realZhuanxians;
     }

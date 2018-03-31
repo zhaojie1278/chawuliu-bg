@@ -159,7 +159,7 @@ class Contact extends Common {
     }
 
     /**
-     * 修改公司信息
+     * 收藏/取消收藏操作
      */
     public function favCompany() {
         $data = input('post.');

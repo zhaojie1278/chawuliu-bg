@@ -16,9 +16,9 @@ class Image extends Controller
      */
     public function upload() {
         $file = request()->file('file');
-        /* if (empty($file)) {
-            return show(config('code.error'), '抱歉，图片不存在', [], 400);
-        } */
+        if (empty($file)) {
+            return show(config('code.error'), '抱歉，上传图片不存在', [], 400);
+        }
         $info = $file->validate(['size'=>2097152,'ext'=>'jpg,png,gif,bmp,jpeg'])->move('uploads/wafer'); // 2M限制
         if ($info) {
             $saveName = $info->getSaveName();

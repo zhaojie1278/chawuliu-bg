@@ -25,15 +25,47 @@ class Zhuanxian extends Common {
         }
         return show(config('code.success'), 'OK', ['id'=>$id], 200);
     }
+
+    /**
+     * 根据ID和用户ID删除专线(软删除)
+     */
+    public function delByIdCid() {
+        $data = input('post.');
+        if (empty($data['id']) || empty($data['cid'])) {
+            return show(config('code.error'), 'sorry, param error', [], 400);
+        }
+        //入库操作
+        try {
+            $where['status'] = config('code.status_normal');
+            $where['cid'] = $data['cid'];
+            $zx = model('common/Zhuanxian')->getById($data['id'], $where);
+            if ($zx) {
+                $res = model('common/Zhuanxian')->del($data); // 软删除
+            } else {
+                $res = true;
+            }
+        }catch (\Exception $e) {
+            return show(config('code.error'), $e->getMessage(), [], 400);
+        }
+        return show(config('code.success'), 'OK', ['res'=>$res], 200);
+    }
     
     /**
      * 首页推荐专线
      */
     public function indexTui() {
         try {
-            $total = model('zhuanxian')->getTuiZhuanxianCount();
+            $data = input('post.');
+            if (!empty($data['start'])) {
+                $condition['start'] = $data['start'];
+            }
+            if (!empty($data['point'])) {
+                $condition['point'] = $data['point'];
+            }
+
+            $total = model('zhuanxian')->getTuiZhuanxianCount($condition);
             $this->getPageAndSize(input('get.'));
-            $tuis = model('zhuanxian')->getTuiZhuanxians($this->from, $this->size);
+            $tuis = model('zhuanxian')->getTuiZhuanxians($condition, $this->from, $this->size);
             $total = count($tuis);
         } catch (\Exception $e) {
             return show(config('code.error'), $e->getMessage(), [], 400);
@@ -54,13 +86,13 @@ class Zhuanxian extends Common {
         // halt(request()->header());
         $data = input('post.');
         // halt($data);
+        $where['status'] = config('code.status_normal');
         if (!empty($data['start'])) {
             $where['start'] = $data['start'];
         }
         if (!empty($data['point'])) {
             $where['point'] = $data['point'];
         }
-        $where['status'] = config('code.status_normal');
         $this->getPageAndSize($data);
         try {
             $total = model('zhuanxian')->getZhuanxiansCount($where);
@@ -75,6 +107,30 @@ class Zhuanxian extends Common {
             'list' => $zhuanxians
         ];
         return show(config('code.success'), 'OK', $result, 200);
+    }
+    
+    /**
+     * 根据Openid获取用户所有专线
+     */
+    public function getAllByOpenid() {
+        $data = input('post.');
+        if (empty($data['openid'])) {
+            return show(config('code.error'), 'sorry, param error', [], 400);
+        }
+        $where['status'] = config('code.status_normal');
+        $zhuanxians = [];
+        try {
+            // 获取用户信息
+            $openidContact = model('contact')->getByOpenid($data['openid'], $where);
+            // halt($openidContact->toArray());
+            if ($openidContact) {
+                $zhuanxians = model('zhuanxian')->getZhuanxiansByCid($openidContact->id);
+            }
+        } catch (\Exception $e) {
+            return show(config('code.error'), $e->getMessage(), [], 400);
+        }
+        // dump(model('zhuanxian')->getLastSql());
+        return show(config('code.success'), 'OK', ['list' => $zhuanxians], 200);
     }
 
     /**
