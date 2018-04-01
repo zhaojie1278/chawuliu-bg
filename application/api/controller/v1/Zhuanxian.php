@@ -19,6 +19,12 @@ class Zhuanxian extends Common {
         $data = input('post.');
         //入库操作
         try {
+            if(empty($data['catname'])) {
+                return show(config('code.error'), 'sorry, param error', [], 400);
+            }
+            $cats = config('zhuanxian.cat_flip');
+            $data['cat'] = $cats[$data['catname']];
+            // halt($data['cat']);
             $id = model('common/Zhuanxian')->add($data);
         }catch (\Exception $e) {
             return show(config('code.error'), $e->getMessage(), [], 400);
@@ -92,6 +98,9 @@ class Zhuanxian extends Common {
         }
         if (!empty($data['point'])) {
             $where['point'] = $data['point'];
+        }
+        if (!empty($data['areacatid'])) {
+            $where['cat'] = $data['areacatid'];
         }
         $this->getPageAndSize($data);
         try {

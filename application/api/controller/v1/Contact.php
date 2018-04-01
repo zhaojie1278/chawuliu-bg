@@ -74,6 +74,7 @@ class Contact extends Common {
             return show(config('code.error'), 'openid get error.', [], 500);
         }
         if (!empty($contact)) {
+            $contact->cats = array_keys(config('zhuanxian.cat_flip')); // 专线类型
             return show(config('code.success'), 'OK', $contact, 200);
         } else {
             return show(config('code.error'), 'openid get user is not exist.', [], 401);

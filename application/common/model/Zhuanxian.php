@@ -57,7 +57,7 @@ class Zhuanxian extends Base {
     public function getTuiZhuanxianCount($condition = []) {
         $where = [
             'status'=>config('code.status_normal'),
-            'isrecommend'=>config('code.recommend')
+            // 'isrecommend'=>config('code.recommend')
         ];
         if ($condition) {
             $where = array_merge($where, $condition);
@@ -70,7 +70,7 @@ class Zhuanxian extends Base {
     public function getTuiZhuanxians($condition = [], $from = 0, $size = 10) {
         $where = [
             'status'=>config('code.status_normal'),
-            'isrecommend'=>config('code.recommend')
+            // 'isrecommend'=>config('code.recommend')
         ];
         
         if ($condition) {
