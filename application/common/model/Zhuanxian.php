@@ -33,7 +33,7 @@ class Zhuanxian extends Base {
             'cid'=>['EQ',$cid],
             'status'=>['EQ',config('code.status_normal')]
         ];
-        $data = $this->where($whereCond)->select();
+        $data = $this->where($whereCond)->order('update_time','desc')->select();
         return $data;
     }
 

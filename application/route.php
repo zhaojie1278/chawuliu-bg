@@ -24,7 +24,7 @@ Route::get('api/:ver/index','api/:ver.index/read');
 Route::post('api/:ver/zhuanxian/tui','api/:ver.zhuanxian/indextui'); // 首页推荐专线
 Route::post('api/:ver/zhuanxian/search','api/:ver.zhuanxian/search');
 Route::post('api/:ver/zhuanxian/add','api/:ver.zhuanxian/add');
-Route::get('api/:ver/zhuanxian/:id','api/:ver.zhuanxian/detail');
+Route::post('api/:ver/zhuanxian/toupdate','api/:ver.zhuanxian/detail');
 
 
 // 用户

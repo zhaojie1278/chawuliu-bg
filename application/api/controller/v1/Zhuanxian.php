@@ -17,6 +17,7 @@ class Zhuanxian extends Common {
     // 发布专线
     public function add() {
         $data = input('post.');
+        // TODO 程序的健壮性处理
         //入库操作
         try {
             if(empty($data['catname'])) {
@@ -25,7 +26,13 @@ class Zhuanxian extends Common {
             $cats = config('zhuanxian.cat_flip');
             $data['cat'] = $cats[$data['catname']];
             // halt($data['cat']);
-            $id = model('common/Zhuanxian')->add($data);
+            if (empty($data['id'])) {
+                // 添加
+                $id = model('common/Zhuanxian')->add($data);
+            } else {
+                // 修改
+                $id = model('common/Zhuanxian')->edit($data);
+            }
         }catch (\Exception $e) {
             return show(config('code.error'), $e->getMessage(), [], 400);
         }
@@ -145,13 +152,14 @@ class Zhuanxian extends Common {
     /**
      * 根据专线ID获取详细信息
      */
-/*     public function detail($id) {
-        if (empty($id)) {
-            return show(config('code.error'), 'id not send', [], 400);
+    public function detail() {
+        $data = input('put.');
+        if (empty($data['id']) || empty($data['cid'])) {
+            return show(config('code.error'), 'id not send1', [], 400);
         }
-        $whereCond = ['id'=>$id, 'status'=>['EQ',config('code.status_normal')]];
-        $result = model('zhuanxian')->getById($id, $whereCond);
+        $whereCond = ['status'=>['EQ',config('code.status_normal')], 'cid'=>$data['cid']];
+        $result = model('zhuanxian')->getById($data['id'], $whereCond);
         // $result = model('zhuanxian')->getRealZhuanxian($result);
         return show(config('code.success'), 'OK', $result, 200);
-    } */
+    }
 }
