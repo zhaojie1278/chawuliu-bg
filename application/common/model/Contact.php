@@ -64,7 +64,7 @@ class Contact extends Base {
             $whereCond = ['status'=>['NEQ',config('code.status_delete')]];
         }
         $whereCond['id'] = ['IN',$ids];
-        $contacts = $this->field('id,nickname,phone,company,address,img1,img2,img3,img4')->where($whereCond)->select();
+        $contacts = $this->field('id,nickname,phone,company,address,img1,img2,img3,img4,avatarUrl,wxnickname,create_time')->where($whereCond)->select();
         return $contacts;
     }
 
@@ -123,16 +123,20 @@ class Contact extends Base {
     /**
      * 获取展示的图片
      */
-    public function getShowImg($contact) {
+    public function getShowImg($contact, $isAvatarUrl = false) {
         $img = '';
-        if (!empty($contact->img1)) {
-            $img = $contact->img1;
-        } else if (!empty($contact->img2)) {
-            $img =  $contact->img2;
-        } else if (!empty($contact->img3)) {
-            $img =  $contact->img3;
-        } else if (!empty($contact->img4)) {
-            $img =  $contact->img4;
+        if ($isAvatarUrl) {
+            $img = $contact->avatarUrl;
+        } else {
+            if (!empty($contact->img1)) {
+                $img = $contact->img1;
+            } else if (!empty($contact->img2)) {
+                $img =  $contact->img2;
+            } else if (!empty($contact->img3)) {
+                $img =  $contact->img3;
+            } else if (!empty($contact->img4)) {
+                $img =  $contact->img4;
+            }
         }
         return $img;
     }

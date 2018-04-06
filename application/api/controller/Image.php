@@ -19,12 +19,16 @@ class Image extends Controller
         if (empty($file)) {
             return show(config('code.error'), '抱歉，上传图片不存在', [], 400);
         }
-        $info = $file->validate(['size'=>2097152,'ext'=>'jpg,png,gif,bmp,jpeg'])->move('uploads/wafer'); // 2M限制
+        $data = input('post.');
+        if (empty($data['from']) || !in_array($data['from'], config('image.img_from'))) {
+            return show(config('code.error'), '抱歉，上传参数传递错误', [], 400);
+        }
+        $info = $file->validate(['size'=>2097152,'ext'=>'jpg,png,gif,bmp,jpeg'])->move('uploads/wafer/'.$data['from']); // 2M限制
         if ($info) {
             $saveName = $info->getSaveName();
             $saveName = $saveName ? str_replace('\\','/',$saveName) : '';
             $data = [
-                'imgurl'=>'/uploads/wafer/'.$saveName,
+                'imgurl'=>'/uploads/wafer/'.$data['from'].'/'.$saveName,
             ];
             return show(config('code.success'), 'ok', $data, 200);//输出openid            
         } else {

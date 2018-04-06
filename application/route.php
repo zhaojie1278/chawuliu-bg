@@ -26,6 +26,11 @@ Route::post('api/:ver/zhuanxian/search','api/:ver.zhuanxian/search');
 Route::post('api/:ver/zhuanxian/add','api/:ver.zhuanxian/add');
 Route::post('api/:ver/zhuanxian/toupdate','api/:ver.zhuanxian/detail');
 
+// 超级买卖：车辆买卖/司机招聘
+Route::post('api/:ver/sellmsg/add','api/:ver.sellmsg/add');
+Route::post('api/:ver/sellmsg/toupdate','api/:ver.sellmsg/detail');
+Route::post('api/:ver/sellmsg/search','api/:ver.sellmsg/search');
+
 
 // 用户
 // Route::get('api/:ver/contact','api/:ver.contact/detail'); // 详情
@@ -35,7 +40,9 @@ Route::post('api/:ver/contact/companyinfo','api/:ver.contact/detailbyopenid'); /
 Route::post('api/:ver/contact/addcompany','api/:ver.contact/addcompany'); // 添加公司信息
 Route::post('api/:ver/contact/updatecompany','api/:ver.contact/updatecompany'); // 修改公司信息
 Route::post('api/:ver/contact/getallzx','api/:ver.zhuanxian/getallbyopenid'); // 根据openid获取用户所有专线
+Route::post('api/:ver/contact/getallsellmsg','api/:ver.sellmsg/getallbyopenid'); // 根据openid获取用户所有超级买卖信息
 Route::post('api/:ver/contact/delzx','api/:ver.zhuanxian/delByIdCid'); // 根据用户id和专线id删除专线
+Route::post('api/:ver/contact/delsellmsg','api/:ver.sellmsg/delByIdCid'); // 根据用户id和专线id删除超级买卖信息
 Route::post('api/:ver/contact','api/:ver.contact/detail'); // 详情
 
 // 收藏
