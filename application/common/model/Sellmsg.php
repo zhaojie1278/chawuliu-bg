@@ -53,17 +53,48 @@ class Sellmsg extends Base {
     /**
      * API获取专线总条数
      */
-    public function getSellmsgsCount($condition = []) {
-        $count = $this->where($condition)->count();
+    public function getSellmsgsCount($condition = [], $prov = '', $city = '') {
+        if (!empty($prov) && $prov == $city) {
+            $city = '';
+        }
+        if (!empty($prov) && !empty($city)) {
+            $count = $this->where($condition)->where(function ($query) use($prov, $city) {
+                $query->where('address', 'like', '%'.$prov.'%')->whereOr('address', 'like', '%'.$city.'%');
+            })->count();
+        } else if (!empty($prov)) {
+            $condition['address'] = ['LIKE', '%'.$prov.'%'];
+            $count = $this->where($condition)->count();
+        } else if (!empty($city)) {
+            $condition['address'] = ['LIKE', '%'.$city.'%'];
+            $count = $this->where($condition)->count();
+        } else {
+            $count = $this->where($condition)->count();            
+        }
         return $count;
     }
 
     /**
      * API获取专线，分页
      */
-    public function getSellmsgsByPage($condition = [], $from = 0, $size = 10) {
+    public function getSellmsgsByPage($condition = [], $from = 0, $size = 10, $prov = '', $city = '') {
         $order = ['create_time'=>'DESC'];
-        $data = $this->where($condition)->order($order)->select();
+        if (!empty($prov) && $prov == $city) {
+            $city = '';
+        }
+        if (!empty($prov) && !empty($city)) {
+            $data = $this->where($condition)->where(function ($query) use($prov, $city) {
+                $query->where('address', 'like', '%'.$prov.'%')->whereOr('address', 'like', '%'.$city.'%');
+            })->order($order)->select();
+        } else if (!empty($prov)) {
+            $condition['address'] = ['LIKE', '%'.$prov.'%'];
+            $data = $this->where($condition)->order($order)->select();
+        } else if (!empty($city)) {
+            $condition['address'] = ['LIKE', '%'.$city.'%'];
+            $data = $this->where($condition)->order($order)->select();
+        } else {
+            $data = $this->where($condition)->order($order)->select();            
+        }
+        // halt($this->getLastSql());
         $data = $this->getRealData($data);
         return $data;
     }
@@ -107,6 +138,28 @@ class Sellmsg extends Base {
     }
 
     /**
+     * 获取专线信息，带有联系人信息
+     */
+    public function getRealDataSingle($sellmsg = null) {
+        if (empty($sellmsg)) {
+            return null;
+        }
+        
+        $where['status'] = config('code.status_normal');
+        $contact = model('contact')->getById($sellmsg->cid, $where);
+        if (empty($contact)) {
+            return null;
+        }
+
+        $image = model('contact')->getShowImg($contact, true);
+        $sellmsg->avatarurl = $image;
+        $sellmsg->timebefore = time_ago(strtotime($sellmsg->create_time));
+        $sellmsg->company = $contact->company;
+        $sellmsg->imgcount = $this->getImgcount($sellmsg);
+        return $sellmsg;
+    }
+
+    /**
      * 获取图片数量
      */
     public function getImgcount($data) {
@@ -129,15 +182,17 @@ class Sellmsg extends Base {
     /**
      * API获取用户信息，拼装用户公司图片介绍URL
      */
-    public function getImgSellmsg($data) {
+    public function getImgSellmsg($data, $getshowImg = false) {
         // halt($ct);
         if (!empty($data)) {
             $data->domainimg1 = $data->img1 ? request()->domain().$data->img1 : '';
             $data->domainimg2 = $data->img2 ? request()->domain().$data->img2 : '';
             $data->domainimg3 = $data->img3 ? request()->domain().$data->img3 : '';
             $data->domainimg4 = $data->img4 ? request()->domain().$data->img4 : '';
-            $showimage = $this->getShowImg($data);
-            $data->showimage = $showimage ? request()->domain().$showimage : '';
+            if ($getshowImg) {
+                $showimage = $this->getShowImg($data);
+                $data->showimage = $showimage ? request()->domain().$showimage : '';
+            }
         }
         return $data;
     }

@@ -70,19 +70,29 @@ class Sellmsg extends Common {
         $data = input('post.');
         // halt($data);
         $where['status'] = config('code.status_normal');
+        $prov = '';
+        $city = '';
+
         if (!empty($data['prov'])) {
-            $where['prov'] = $data['prov'];
+            // $where['address'] = ['LIKE', '%'.$data['prov'].'%'];
+            $prov = $data['prov'];
         }
         if (!empty($data['city'])) {
-            $where['city'] = $data['city'];
+            /* if (!empty($data['prov'])) {
+                $where2['address'] = ['LIKE', '%'.$data['city'].'%'];
+            } else {
+                $where['address'] = ['LIKE', '%'.$data['city'].'%'];
+            } */
+            $city = $data['city'];
         }
         if (!empty($data['cat'])) {
             $where['cat'] = $data['cat'];
         }
         $this->getPageAndSize($data);
         try {
-            $total = model('sellmsg')->getSellmsgsCount($where);
-            $sellmsgs = model('sellmsg')->getSellmsgsByPage($where, $this->from, $this->size);
+            $total = model('sellmsg')->getSellmsgsCount($where, $prov, $city);
+            // halt(model('sellmsg')->getLastSql());
+            $sellmsgs = model('sellmsg')->getSellmsgsByPage($where, $this->from, $this->size, $prov, $city);
         } catch (\Exception $e) {
             return show(config('code.error'), $e->getMessage(), [], 400);
         }
@@ -122,7 +132,7 @@ class Sellmsg extends Common {
     }
 
     /**
-     * 根据超级买卖ID获取详细信息
+     * 根据超级买卖ID和用户ID获取详细信息
      */
     public function detail() {
         $data = input('put.');
@@ -131,6 +141,21 @@ class Sellmsg extends Common {
         }
         $whereCond = ['status'=>['EQ',config('code.status_normal')], 'cid'=>$data['cid']];
         $data = model('sellmsg')->getById($data['id'], $whereCond);
+        $result = model('sellmsg')->getImgSellmsg($data);
+        return show(config('code.success'), 'OK', $result, 200);
+    }
+
+    /**
+     * 根据超级买卖ID获取详细信息
+     */
+    public function detailById() {
+        $data = input('put.');
+        if (empty($data['id']) || empty($data['openid'])) { // Openid 只做判断是否传递处理，其他严格校验未做验证
+            return show(config('code.error'), 'id not send222', [], 400);
+        }
+        $whereCond = ['status'=>['EQ',config('code.status_normal')]];
+        $data = model('sellmsg')->getById($data['id'], $whereCond);
+        $data = model('sellmsg')->getRealDataSingle($data);
         $result = model('sellmsg')->getImgSellmsg($data);
         return show(config('code.success'), 'OK', $result, 200);
     }

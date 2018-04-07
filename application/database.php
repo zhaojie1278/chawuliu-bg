@@ -22,7 +22,8 @@ return [
     // 密码
     'password'        => 'wxwuliu987', 
    
-    /* // 服务器地址
+    // 服务器地址
+    /* 
     'hostname'        => '127.0.0.1',
     // 数据库名
     'database'        => 'chawuliu',

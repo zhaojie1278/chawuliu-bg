@@ -30,6 +30,7 @@ Route::post('api/:ver/zhuanxian/toupdate','api/:ver.zhuanxian/detail');
 Route::post('api/:ver/sellmsg/add','api/:ver.sellmsg/add');
 Route::post('api/:ver/sellmsg/toupdate','api/:ver.sellmsg/detail');
 Route::post('api/:ver/sellmsg/search','api/:ver.sellmsg/search');
+Route::post('api/:ver/sellmsg/detail','api/:ver.sellmsg/detailById');
 
 
 // 用户
