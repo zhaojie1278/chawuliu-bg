@@ -5,16 +5,8 @@ use app\common\lib\exception\ApiException;
 use app\common\lib\Aes;
 use app\api\controller\Common;
 
-class Zhuanxian extends Common {
-    /**
-     * 返回轮播图
-     */
-    public function index($id = 0) {
-        // halt(input());
-        // TODO
-    }
-
-    // 发布专线
+class Zhaopin extends Common {
+    // 发布
     public function add() {
         $data = input('post.');
         // TODO 程序的健壮性处理
@@ -23,15 +15,21 @@ class Zhuanxian extends Common {
             if(empty($data['catname'])) {
                 return show(config('code.error'), 'sorry, param error', [], 400);
             }
-            $cats = config('zhuanxian.cat_flip');
+            $cats = config('zhaopin.zhaopin_flip');
             $data['cat'] = $cats[$data['catname']];
+
+            // 判断图片至少一张
+            /* if (empty($data['img1']) && empty($data['img2']) && empty($data['img3']) && empty($data['img4'])) {
+                return show(config('code.error'), '请上传至少一张图片', [], 400);
+            } */
+
             // halt($data['cat']);
             if (empty($data['id'])) {
                 // 添加
-                $id = model('common/Zhuanxian')->add($data);
+                $id = model('common/Zhaopin')->add($data);
             } else {
                 // 修改
-                $id = model('common/Zhuanxian')->edit($data);
+                $id = model('common/Zhaopin')->edit($data);
             }
         }catch (\Exception $e) {
             return show(config('code.error'), $e->getMessage(), [], 400);
@@ -40,7 +38,7 @@ class Zhuanxian extends Common {
     }
 
     /**
-     * 根据ID和用户ID删除专线(软删除)
+     * 根据ID和用户ID删除(软删除)
      */
     public function delByIdCid() {
         $data = input('post.');
@@ -51,9 +49,9 @@ class Zhuanxian extends Common {
         try {
             $where['status'] = config('code.status_normal');
             $where['cid'] = $data['cid'];
-            $zx = model('common/Zhuanxian')->getById($data['id'], $where);
-            if ($zx) {
-                $res = model('common/Zhuanxian')->del($data); // 软删除
+            $zhaopin = model('common/Zhaopin')->getById($data['id'], $where);
+            if ($zhaopin) {
+                $res = model('common/Zhaopin')->del($data); // 软删除
             } else {
                 $res = true;
             }
@@ -63,79 +61,52 @@ class Zhuanxian extends Common {
         return show(config('code.success'), 'OK', ['res'=>$res], 200);
     }
     
-    /**
-     * 首页推荐专线
-     */
-    public function indexTui() {
-        try {
-            $data = input('post.');
-            if (!empty($data['start'])) {
-                $condition['start'] = $data['start'];
-            }
-            if (!empty($data['point'])) {
-                $condition['point'] = $data['point'];
-            }
-
-            $total = model('zhuanxian')->getTuiZhuanxianCount($condition);
-            $this->getPageAndSize(input('get.'));
-            $tuis = model('zhuanxian')->getTuiZhuanxians($condition, $this->from, $this->size);
-            $total = count($tuis);
-        } catch (\Exception $e) {
-            return show(config('code.error'), $e->getMessage(), [], 400);
-        }
-
-        $result = [
-            'total' => $total,
-            'page_num' => ceil($total / $this->size),
-            'list' => $tuis
-        ];
-        return show(config('code.success'), 'OK', $result, 200);
-    }
 
     /**
-     * 获取查询专线
+     * 获取查询超级买卖
      */
     public function search() {
         // halt(request()->header());
         $data = input('post.');
         // halt($data);
         $where['status'] = config('code.status_normal');
-        if (!empty($data['start'])) {
-            $where['start'] = $data['start'];
+        $prov = '';
+        $city = '';
+
+        if (!empty($data['prov'])) {
+            // $where['address'] = ['LIKE', '%'.$data['prov'].'%'];
+            $prov = $data['prov'];
         }
-        if (!empty($data['point']) && $data['point'] != '请选择') {
-            $where['point'] = $data['point'];
+        if (!empty($data['city'])) {
+            /* if (!empty($data['prov'])) {
+                $where2['address'] = ['LIKE', '%'.$data['city'].'%'];
+            } else {
+                $where['address'] = ['LIKE', '%'.$data['city'].'%'];
+            } */
+            $city = $data['city'];
         }
-        /*
-        if (!empty($data['start_prov'])) {
-            $where['start_prov'] = $data['start_prov'];
-        }
-        if (!empty($data['point_prov'])) {
-            $where['point_prov'] = $data['point_prov'];
-        }*/
         if (!empty($data['cat'])) {
             $where['cat'] = $data['cat'];
-        } else {
-            return show(config('code.error'), 'error param.', [], 400);
         }
         $this->getPageAndSize($data);
         try {
-            $total = model('zhuanxian')->getZhuanxiansCount($where);
-            $zhuanxians = model('zhuanxian')->getZhuanxiansByPage($where, $this->from, $this->size);
+            $total = model('zhaopin')->getZhaopinsCount($where, $prov, $city);
+            // halt(model('zhaopin')->getLastSql());
+            $zhaopins = model('zhaopin')->getZhaopinsByPage($where, $this->from, $this->size, $prov, $city);
         } catch (\Exception $e) {
             return show(config('code.error'), $e->getMessage(), [], 400);
         }
-        // dump(model('zhuanxian')->getLastSql());
+        // dump(model('zhaopin')->getLastSql());
         $result = [
             'total' => $total,
             'page_num' => ceil($total / $this->size),
-            'list' => $zhuanxians
+            'list' => $zhaopins
         ];
         return show(config('code.success'), 'OK', $result, 200);
     }
     
     /**
-     * 根据Openid获取用户所有专线
+     * 根据Openid获取用户所有超级买卖
      */
     public function getAllByOpenid() {
         $data = input('post.');
@@ -143,13 +114,13 @@ class Zhuanxian extends Common {
             return show(config('code.error'), 'sorry, param error', [], 400);
         }
         $where['status'] = config('code.status_normal');
-        $zhuanxians = [];
+        $zhaopins = [];
         try {
             // 获取用户信息
             $openidContact = model('contact')->getByOpenid($data['openid'], $where);
             // halt($openidContact->toArray());
             if ($openidContact) {
-                $zhuanxians = model('zhuanxian')->getZhuanxiansByCid($openidContact->id);
+                $zhaopins = model('zhaopin')->getZhaopinsByCid($openidContact->id);
             } else {
                 return show(config('code.error'), 'openid is not exist', [], 400);
             }
@@ -157,11 +128,11 @@ class Zhuanxian extends Common {
             return show(config('code.error'), $e->getMessage(), [], 400);
         }
         // dump(model('zhuanxian')->getLastSql());
-        return show(config('code.success'), 'OK', ['list' => $zhuanxians], 200);
+        return show(config('code.success'), 'OK', ['list' => $zhaopins], 200);
     }
 
     /**
-     * 根据专线ID获取详细信息
+     * 获取详细信息
      */
     public function detail() {
         $data = input('put.');
@@ -169,8 +140,23 @@ class Zhuanxian extends Common {
             return show(config('code.error'), 'id not send1', [], 400);
         }
         $whereCond = ['status'=>['EQ',config('code.status_normal')], 'cid'=>$data['cid']];
-        $result = model('zhuanxian')->getById($data['id'], $whereCond);
-        // $result = model('zhuanxian')->getRealZhuanxian($result);
+        $data = model('zhaopin')->getById($data['id'], $whereCond);
+        $result = model('zhaopin')->getImgZhaopin($data);
+        return show(config('code.success'), 'OK', $result, 200);
+    }
+
+    /**
+     * 获取详细信息
+     */
+    public function detailById() {
+        $data = input('put.');
+        if (empty($data['id']) || empty($data['openid'])) { // Openid 只做判断是否传递处理，其他严格校验未做验证
+            return show(config('code.error'), 'id not send222', [], 400);
+        }
+        $whereCond = ['status'=>['EQ',config('code.status_normal')]];
+        $data = model('zhaopin')->getById($data['id'], $whereCond);
+        $data = model('zhaopin')->getRealDataSingle($data);
+        $result = model('zhaopin')->getImgZhaopin($data);
         return show(config('code.success'), 'OK', $result, 200);
     }
 }

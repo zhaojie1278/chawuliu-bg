@@ -9,7 +9,7 @@ use think\Controller;
 class Area extends Controller {
 
     /**
-     * 获取OPENID信息
+     * 根据省市code动态获取数据
      */
     public function getArea() {
         // https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code
@@ -29,5 +29,37 @@ class Area extends Controller {
         }
         // $areaRes = get_object_vars($jsondecode);//转换成数组
         return show(config('code.success'), 'ok', $areaResJson['result'], 200);//输出openid
+    }
+
+    /**
+     * 获取省份
+     * @return json
+     */
+    public function getProvins() {
+        $provinces = model('area')->getAllProvince();
+        return show(config('code.success'), 'ok', $provinces, 200);
+    }
+
+    /**
+     * 获取城市
+     * @return json
+     */
+    public function getCitys() {
+        $provinces = model('area')->getCitysByCode();
+        return show(config('code.success'), 'ok', $provinces, 200);
+    }
+
+    /**
+     * 获取县
+     * @return json
+     */
+    public function getAreas() {
+        $provinces = model('area')->getAreasByCode();
+        return show(config('code.success'), 'ok', $provinces, 200);
+    }
+
+    public function getCode() {
+        $code = model('area')->getCode();
+        return show(config('code.success'), 'ok', $code, 200);
     }
 }

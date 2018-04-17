@@ -114,13 +114,13 @@ class Sellmsg extends Common {
             return show(config('code.error'), 'sorry, param error', [], 400);
         }
         $where['status'] = config('code.status_normal');
-        $zhuanxians = [];
+        $sellmsgs = [];
         try {
             // 获取用户信息
             $openidContact = model('contact')->getByOpenid($data['openid'], $where);
             // halt($openidContact->toArray());
             if ($openidContact) {
-                $zhuanxians = model('sellmsg')->getSellmsgsByCid($openidContact->id);
+                $sellmsgs = model('sellmsg')->getSellmsgsByCid($openidContact->id);
             } else {
                 return show(config('code.error'), 'openid is not exist', [], 400);
             }
@@ -128,7 +128,7 @@ class Sellmsg extends Common {
             return show(config('code.error'), $e->getMessage(), [], 400);
         }
         // dump(model('zhuanxian')->getLastSql());
-        return show(config('code.success'), 'OK', ['list' => $zhuanxians], 200);
+        return show(config('code.success'), 'OK', ['list' => $sellmsgs], 200);
     }
 
     /**
