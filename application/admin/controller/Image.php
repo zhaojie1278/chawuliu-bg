@@ -16,7 +16,7 @@ class Image extends Controller
      */
     public function upload() {
         $file = request()->file('file');
-        $info = $file->validate(['size'=>1048576,'ext'=>'jpg,png,gif,bmp,jpeg'])->move('uploads');
+        $info = $file->validate(['size'=>1048576,'ext'=>'jpg,png,gif,bmp,jpeg'])->move('uploads/back');
         if ($info) {
 //            halt($info);
             $saveName = $info->getSaveName();
@@ -24,7 +24,7 @@ class Image extends Controller
             $data = [
                 'status'=>1,
                 'message'=>'ok',
-                'data'=>'/uploads/'.$saveName,
+                'data'=>'/uploads/back/'.$saveName,
             ];
         } else {
             $data = [

@@ -3,25 +3,14 @@ namespace app\admin\controller;
 
 use think\Controller;
 
-class Zhuanxian extends Base
+class News extends Base
 {
     public function index() {
         $where = [];
         if (request()->isPost()) {
             $condition = input('post.');
-            if (!empty($condition['start_prov'])) {
-                // $where['start_prov'] = ['LIKE','%'.$condition['start_prov']];
-                $where['start'] = ['LIKE','%'.$condition['start_prov'].'%'];
-            }
-            if (!empty($condition['start'])) {
-                $where['start'] = ['LIKE','%'.$condition['start'].'%'];
-            }
-            if (!empty($condition['point_prov'])) {
-                // $where['point_prov'] = ['LIKE','%'.$condition['point_prov']];
-                $where['point'] = ['LIKE','%'.$condition['point_prov'].'%'];
-            }
-            if (!empty($condition['point'])) {
-                $where['point'] = ['LIKE','%'.$condition['point'].'%'];
+            if (!empty($condition['title'])) {
+                $where['title'] = ['LIKE','%'.$condition['title'].'%'];
             }
             if (!empty($condition['starttime'])) {
                 $where['create_time'] = ['>=',$condition['starttime']];
@@ -36,42 +25,28 @@ class Zhuanxian extends Base
         } else {
             $condition = [];
         }
-        $zhuanxians = model('common/zhuanxian')->getAll($where);
-        if ($zhuanxians) {
-            foreach ($zhuanxians as $zx) {
-                $cids[] = $zx['cid'];
-            }
-            $contacts = model('common/Contact')->getAllContactInIds($cids);
-        } else {
-            $contacts = array();
-        }
-//        dump( model('common/Contact')->getLastSql());
-        $contactsArr = array();
-        if ($contacts) {
-            foreach ($contacts as $c) {
-                $contactsArr[$c->id] = $c->toArray();
-            }
-        }
-        return $this->fetch('',['zhuanxians'=>$zhuanxians,'condition'=>$condition,'contacts'=>$contactsArr,'cats'=>config('zhuanxian.cats')]);
+        $news = model('common/news')->getAll($where);
+        return $this->fetch('',['news'=>$news,'condition'=>$condition]);
     }
 
     /**
      * 添加
      * @return mixed|void
      */
-    public function add()
-    {
+    public function add() {
         if(request()->isPost()) {
 
             $data = input('post.');
             // 数据需要做检验
-            $validate = validate('Zhuanxian');
+            $validate = validate('News');
             if (!$validate->check($data)) {
                 return $this->error($validate->getError());
             }
+
             //入库操作
             try {
-                $id = model('common/Zhuanxian')->add($data);
+                $data['uid'] = $this->userGlobal->id;
+                $id = model('common/News')->add($data);
             }catch (\Exception $e) {
                 return $this->error($e->getMessage());
             }
@@ -82,8 +57,9 @@ class Zhuanxian extends Base
                 $this->error('新增失败');
             }
         }else {
-            $contacts = model('common/Contact')->getAllContact();
-            return $this->fetch('', ['contacts' => $contacts]);
+            // $contacts = model('common/Newscat')->getAllContact();
+            // return $this->fetch('',['contacts'=>$contacts]);
+            return $this->fetch('');
         }
     }
 
@@ -97,13 +73,14 @@ class Zhuanxian extends Base
 
             $data = input('post.');
             // 数据需要做检验
-            $validate = validate('Zhuanxian');
+            $validate = validate('News');
             if (!$validate->check($data)) {
                 return $this->error($validate->getError());
             }
             //入库操作
             try {
-                $rs = model('common/Zhuanxian')->edit($data);
+                // 修改联系人信息
+                $rs = model('common/News')->edit($data);
             }catch (\Exception $e) {
                 return $this->error($e->getMessage());
             }
@@ -117,10 +94,8 @@ class Zhuanxian extends Base
             if (!input('get.id')) {
                 $this->error('打开修改界面失败');
             }
-            $contacts = model('common/Contact')->getAllContact();
-            $ent = model('common/zhuanxian')->getById(input('get.id'));
-//            halt(model('common/zhuanxian')->getLastSql());
-            return $this->fetch('', ['contacts' => $contacts, 'ent'=>$ent]);
+            $ent = model('common/News')->getById(input('get.id'));
+            return $this->fetch('', ['ent'=>$ent]);
         }
     }
 
@@ -137,7 +112,7 @@ class Zhuanxian extends Base
             $data = input('post.');
             $msg = '';
             try {
-                $rs = model('common/Zhuanxian')->del($data);
+                $rs = model('common/news')->del($data);
             }catch (\Exception $e) {
                 $msg = $e->getMessage();
                 $rs = false;
@@ -159,7 +134,7 @@ class Zhuanxian extends Base
     }
 
     /**
-     * 置顶
+     * 发布
      */
     public function topHandle() {
         if (!request()->isAjax()) {
@@ -169,14 +144,9 @@ class Zhuanxian extends Base
             ];
         } else {
             $data = input('post.');
-            // 数据需要做检验
-            /*$validate = validate('Zhuanxian');
-            if (!$validate->check($data)) {
-                return $this->error($validate->getError());
-            }*/
             //入库操作
             try {
-                $rs = model('common/Zhuanxian')->edit($data);
+                $rs = model('common/News')->edit($data);
             }catch (\Exception $e) {
                 return $this->error($e->getMessage());
             }

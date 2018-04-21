@@ -4,7 +4,7 @@
     <div class="text-c">
         <form id="form-admin-search" action="<{:url('yaoqing/index')}>" method="post">
         <!--<button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button>-->
-	 发布日期范围：
+	 日期范围：
         <input name="starttime" type="text" onfocus="WdatePicker({})" id="logmin" class="input-text Wdate" style="width:120px;" value="<{$condition['starttime'] ?? ''}>">
         -
         <input name="endtime" type="text" onfocus="WdatePicker({})" id="logmax" class="input-text Wdate" style="width:120px;" value="<{$condition['endtime'] ?? ''}>">

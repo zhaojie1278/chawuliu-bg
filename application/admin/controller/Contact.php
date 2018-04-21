@@ -41,7 +41,7 @@ class Contact extends Base
         if(request()->isPost()) {
 
             $data = input('post.');
-            // 数据需要做检验 validate机制小伙伴自行完成
+            // 数据需要做检验
             $validate = validate('Contact');
             if (!$validate->check($data)) {
                 return $this->error($validate->getError());
@@ -95,7 +95,7 @@ class Contact extends Base
         if(request()->isPost()) {
 
             $data = input('post.');
-            // 数据需要做检验 validate机制小伙伴自行完成
+            // 数据需要做检验
             $validate = validate('Contact');
             if (!$validate->check($data)) {
                 return $this->error($validate->getError());

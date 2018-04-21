@@ -46,7 +46,7 @@ class Yaoqing extends Base
         if(request()->isPost()) {
 
             $data = input('post.');
-            // 数据需要做检验 validate机制小伙伴自行完成
+            // 数据需要做检验
             $validate = validate('Yaoqing');
             if (!$validate->scene('edit')->check($data)) {
                 return $this->error($validate->getError());

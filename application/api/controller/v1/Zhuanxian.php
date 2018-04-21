@@ -27,8 +27,24 @@ class Zhuanxian extends Common {
             $data['cat'] = $cats[$data['catname']];
             // halt($data['cat']);
             if (empty($data['id'])) {
+                unset($data['id']);
+                $allList = array();
+                $allList[] = $data;
+
+                // 配载吊车处理多个目的地
+                if (!empty($data['point2'])) {
+                    $point2 = $data['point2'];
+                    $data['point'] = $point2;
+
+                    $allList[] = $data;
+                }
+                if (!empty($data['point3'])) {
+                    $point3 = $data['point3'];
+                    $data['point'] = $point3;
+                    $allList[] = $data;
+                }
                 // 添加
-                $id = model('common/Zhuanxian')->add($data);
+                $id = model('common/Zhuanxian')->addAll($allList);
             } else {
                 // 修改
                 $id = model('common/Zhuanxian')->edit($data);

@@ -38,18 +38,19 @@
         <button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜</button>
         </form>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="article_batch_del()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加" data-href="<{:url('zhuanxian/add')}>" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加</a></span> <span class="r">共有数据：<strong id="total_count"><{$zhuanxians|count}></strong> 条</span> </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="article_batch_del()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <!-- <a class="btn btn-primary radius" data-title="添加" data-href="<{:url('zhuanxian/add')}>" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加</a> --></span> <span class="r">共有数据：<strong id="total_count"><{$zhuanxians|count}></strong> 条</span> </div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
             <thead>
             <tr class="text-c">
                 <th width="25"><input type="checkbox" name="" value=""></th>
+                <th width="80">类型</th>
                 <th width="80">出发地</th>
                 <th width="80">目的地</th>
                 <th width="80">重货价格</th>
                 <th width="120">泡货价格</th>
                 <th width="75">联系人</th>
-                <th width="75">是否推荐</th>
+                <th width="75">是否置顶</th>
                 <th width="75">发布时间</th>
                 <th width="120">操作</th>
             </tr>
@@ -57,15 +58,21 @@
             <tbody>
             <{volist name='zhuanxians' id='vo'}>
             <tr class="text-c">
-                <td><input type="checkbox" value="<{$vo.id}>" name="ids"></td>
-                <td><{$vo.start_prov}>-<{$vo.start}></td>
-                <td><{$vo.point_prov}>-<{$vo.point}></td>
+                <td>
+                    <input type="checkbox" value="<{$vo.id}>" name="ids">
+                    <input type="hidden" value="<{$vo.istop}>" id="istop_<{$vo.id}>"/>
+                </td>
+                <!-- <td><{$vo.start_prov}>-<{$vo.start}></td>
+                <td><{$vo.point_prov}>-<{$vo.point}></td> -->
+                <td><{$cats[$vo.cat]}></td>
+                <td><{$vo.start}></td>
+                <td><{$vo.point}></td>
                 <td><{$vo.price_zhonghuo}></td>
                 <td><{$vo.price_paohuo}></td>
                 <td><{if condition='!empty($contacts[$vo.cid])'}><{$contacts[$vo.cid]['nickname']}><{else /}><span style="color:#999999">用户不存在</span><{/if}></td>
-                <td><{eq name='$vo.isrecommend' value='1'}><span style="color:#ff0000">推荐</span><{else /}>未推荐<{/eq}></td>
+                <td><span onclick="topHandle(this,'<{$vo.id}>')" style="cursor: pointer; border: 1px solid #ddd; padding: 5px; display: block;"><{eq name='$vo.istop' value='1'}><span style="color:#ff0000;">置顶</span><{else /}><span>未置顶</span><{/eq}></span></td>
                 <td><{$vo.create_time}></td>
-                <td class="f-14 td-manage"><a style="text-decoration:none" class="ml-5" onClick="article_edit('编辑','<{:url(\'zhuanxian/edit\')}>',<{$vo.id}>)" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'<{$vo.id}>')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+                <td class="f-14 td-manage"><!-- <a style="text-decoration:none" class="ml-5" onClick="article_edit('编辑','<{:url(\'zhuanxian/edit\')}>',<{$vo.id}>)" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> --> <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'<{$vo.id}>')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
             </tr>
             <{/volist}>
             </tbody>
@@ -98,7 +105,7 @@
 <script type="text/javascript" src="__STATIC__/hadmin/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
     $('.table-sort').dataTable({
-        "aaSorting": [[ 6, "desc" ]],//默认第几个排序
+        "aaSorting": [[ 8, "desc" ]],//默认第几个排序
         "bStateSave": false,//状态保存
         "pading":false,
         "aoColumnDefs": [
@@ -172,6 +179,40 @@
                 });
             });
         }
+    }
+
+    // 置顶
+    function topHandle(obj, id) {
+        var that = this;
+        var isTop = $('#istop_'+id).val();
+        if (isTop == '0') {
+            var isTop = 1;
+        } else {
+            var isTop = 0;
+        }
+        console.log(isTop);
+        $('#istop_'+id).val(isTop);
+        $.ajax({
+            type: 'POST',
+            url: "<{:url('zhuanxian/topHandle')}>",
+            data:{id:id,istop:isTop},
+            dataType: 'json',
+            success: function(data){
+                if (data.code == '0') {
+                    if (isTop == 1) {
+                        $(obj).html('<span style="color:#ff0000;">置顶</span>')
+                    } else {
+                        $(obj).html('<span>未置顶</span>')
+                    }
+                } else {
+                    layer.msg('修改失败，'+data.msg+'！',{icon:5,time:2000});
+                }
+            },
+            error:function(data) {
+                layer.msg('请求失败!',{icon:5,time:1000});
+                console.log(data.msg);
+            },
+        });
     }
 
 </script>

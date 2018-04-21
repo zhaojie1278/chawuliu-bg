@@ -132,4 +132,36 @@ $(function() {
             $('#file_upload_img4').attr('value', '');
         }
     });
+    $("#file_upload0").uploadify({
+        swf           : swf,
+        uploader      : image_upload_url,
+        buttonText:'上传图片',
+        fileTypeDesc:'Image Files',
+        fileObjName:'file',
+        fileTypeExts:'*.gif;*.jpg;*.png;*.bmp;*.jpeg',
+        onUploadSuccess:function(file, data, response) {
+            var obj = JSON.parse(data);
+            if (obj.status!=1) {
+                layer.msg(obj.message);
+            } else {
+                $('#upload_img0').attr('src', obj.data);
+                $('#upload_img0').show();
+                $('#file_upload_img0').attr('value', obj.data);
+            }
+            // layer.msg(file.id);
+            var cancel=$("#"+file.id + " .cancel a");
+            if (cancel) {
+                cancel.click(function(){
+                    $('#upload_img0').attr('src', '');
+                    $('#upload_img0').hide();
+                    $('#file_upload_img0').attr('value', '');
+                });
+            }
+        },
+        onCancel:function(file) {
+            $('#upload_img0').attr('src', '');
+            $('#upload_img0').hide();
+            $('#file_upload_img0').attr('value', '');
+        }
+    });
 });

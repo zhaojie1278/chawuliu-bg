@@ -13,6 +13,7 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     
+    /* 
     // 服务器地址
     'hostname'        => '125.65.108.73',
     // 数据库名
@@ -20,17 +21,16 @@ return [
     // 用户名
     'username'        => 'wxwuliu',
     // 密码
-    'password'        => 'wxwuliu987', 
+    'password'        => 'wxwuliu987',*/ 
    
     // 服务器地址
-    /* 
     'hostname'        => '127.0.0.1',
     // 数据库名
     'database'        => 'chawuliu',
     // 用户名
     'username'        => 'root',
     // 密码
-    'password'        => 'root',  */
+    'password'        => '123456', 
     // 端口
     'hostport'        => '',
     // 连接dsn

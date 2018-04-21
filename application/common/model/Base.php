@@ -15,6 +15,14 @@ class Base extends Model {
     protected $autoWriteTimestamp = 'datetime';
 
     /**
+     * 保存多条数据
+     * @param array $list
+     * @return 
+     */
+    public function addAll($list) {
+        return $this->allowField(true)->saveAll($list);
+    }
+    /**
      * 新增
      * @param $data
      * @param null $dupfield
@@ -74,6 +82,7 @@ class Base extends Model {
                 $updata = ['status' => config('code.status_delete')];
                 $rs = $this->allowField(true)->save($updata, ['id' => $data['id']]);
             } else if (!empty($data['ids'])) {
+                $updata['status'] = config('code.status_delete');
                 $updata['update_time'] = date('Y-m-d H:i:s');
                 $rs = $this->allowField(true)->where('id', 'IN', $data['ids'])->update($updata);
             }
