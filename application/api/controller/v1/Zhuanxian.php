@@ -35,12 +35,26 @@ class Zhuanxian extends Common {
                 if (!empty($data['point2'])) {
                     $point2 = $data['point2'];
                     $data['point'] = $point2;
+                    $data['point_prov'] = $data['point_prov2'];
 
                     $allList[] = $data;
                 }
                 if (!empty($data['point3'])) {
                     $point3 = $data['point3'];
                     $data['point'] = $point3;
+                    $data['point_prov'] = $data['point_prov3'];
+                    $allList[] = $data;
+                }
+                if (!empty($data['point4'])) {
+                    $point4 = $data['point4'];
+                    $data['point'] = $point4;
+                    $data['point_prov'] = $data['point_prov4'];
+                    $allList[] = $data;
+                }
+                if (!empty($data['point5'])) {
+                    $point5 = $data['point5'];
+                    $data['point'] = $point5;
+                    $data['point_prov'] = $data['point_prov5'];
                     $allList[] = $data;
                 }
                 // 添加
