@@ -1,0 +1,90 @@
+<{include file='public/_meta'}>
+<article class="page-container">
+    <form class="form form-horizontal" id="form-admin-add" action="<{:url('zhuanxian/edit')}>" method="post">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="c-red">*</span>出发地：</label>
+            <div class="formControls col-xs-8 col-sm-9" id="city">
+                <!--<input type="text" class="input-text" autocomplete="off" value="<{$ent->start}>" placeholder="" id="start" name="start">-->
+                <span class="select-box" style="width:200px">
+                    <select class="prov select" name="start_prov"></select>
+                </span>
+                <span class="select-box" style="width:200px">
+                    <select class="city select" disabled="disabled" name="start" id="start">
+                        <option value="">请选择</option>
+                    </select>
+                </span>
+
+                <input type="hidden" name="id" value="<{$ent.id}>"/>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="c-red">*</span>目的地：</label>
+            <div class="formControls col-xs-8 col-sm-9" id="city2">
+                <!--<input type="text" class="input-text" autocomplete="off" placeholder="" id="point" name="point" value="<{$ent->point}>">-->
+                <span class="select-box" style="width:200px">
+                    <select class="prov select" name="point_prov"></select>
+                </span>
+                <span class="select-box" style="width:200px">
+                    <select class="city select" disabled="disabled" name="point" id="point">
+                        <option value="">请选择</option>
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="c-red">*</span>重货价格：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off" placeholder="" id="price_zhonghuo" name="price_zhonghuo" style="width:200px" value="<{$ent->price_zhonghuo}>">&nbsp;元/吨
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                泡货价格：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off" placeholder="" id="price_paohuo" name="price_paohuo" style="width:200px" value="<{$ent->price_paohuo}>">&nbsp;元/方
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="c-red">*</span>联系人：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select name="cid" id="cid" class="select">
+                    <option value="">请选择</option>
+                    <{volist name='contacts' id='vo'}>
+                    <option value="<{$vo.id}>" <{eq name='$vo.id' value='$ent->cid'}>selected='selected'<{/eq}>><{$vo.nickname}></option>
+                    <{/volist}>
+                </select>
+				</span> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                发布时间：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="input-text"><{$ent->create_time}></span>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                <input class="btn radius" type="reset" value="&nbsp;&nbsp;重置&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+</article>
+<{include file='public/_footer'}>
+<script>
+    var city_min_js_url = "__STATIC__/admin/cityselect/city.min.js";
+</script>
+<{load href='__STATIC__/admin/cityselect/jquery.cityselect.js'/}>
+<script>
+    $(function(){
+        $("#city").citySelect({required:false,nodata:'none',prov:"<{$ent->start_prov}>",city:"<{$ent->start}>"});
+        $("#city2").citySelect({required:false,nodata:'none',prov:"<{$ent->point_prov}>",city:"<{$ent->point}>"});
+    })
+</script>
+</body>
+
+</html>

@@ -21,6 +21,7 @@ class News extends Common {
         if (!empty($data['point']) && $data['point'] != '请选择') {
             $where['point'] = $data['point'];
         }
+        $where['istop'] = 1;
         $this->getPageAndSize($data);
         try {
             $total = model('news')->getNewsCount($where);
