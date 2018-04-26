@@ -23,6 +23,7 @@
             <tr class="text-c">
                 <th width="25"><input type="checkbox" name="" value=""></th>
                 <th width="80">类型</th>
+                <th width="80">岗位</th>
                 <th width="80">驾照</th>
                 <th width="80">驾龄</th>
                 <th width="80">工资</th>
@@ -38,7 +39,8 @@
                 <td>
                     <input type="checkbox" value="<{$vo.id}>" name="ids">
                 </td>
-                <td><{$worktypes[$vo.cat]}></td>
+                <td><{$cats[$vo.cat]}></td>
+                <td><{$vo.worktype}></td>
                 <td><{$vo.jiazhao}></td>
                 <td><{$vo.jialing}></td>
                 <td><{$vo.gongzi}></td>

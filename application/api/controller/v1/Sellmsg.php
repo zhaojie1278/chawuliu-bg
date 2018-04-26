@@ -76,6 +76,9 @@ class Sellmsg extends Common {
         if (!empty($data['prov'])) {
             // $where['address'] = ['LIKE', '%'.$data['prov'].'%'];
             $prov = $data['prov'];
+
+            $prov = str_replace('市', '', $prov);
+            $prov = str_replace('省', '', $prov);
         }
         if (!empty($data['city'])) {
             /* if (!empty($data['prov'])) {
@@ -84,6 +87,9 @@ class Sellmsg extends Common {
                 $where['address'] = ['LIKE', '%'.$data['city'].'%'];
             } */
             $city = $data['city'];
+
+            $city = str_replace('市', '', $city);
+            $city = str_replace('省', '', $city);
         }
         if (!empty($data['cat'])) {
             $where['cat'] = $data['cat'];

@@ -47,8 +47,9 @@ class Zhaopin extends Base
                 'zhaopins'=>$zhaopins,
                 'condition'=>$condition,
                 'contacts'=>$contactsArr,
-                'worktypes'=>config('zhaopin.worktypes'),
-                'jiazhaos'=>config('zhaopin.jiazhaos')
+                'cats'=>config('zhaopin.cats'),
+                'jiazhaos'=>config('zhaopin.jiazhaos'),
+                'worktypes'=>config('zhaopin.worktypes')
             ]
         );
     }
