@@ -1,0 +1,34 @@
+<{include file='public/_meta' /}>
+<article class="page-container">
+    <form class="form form-horizontal" id="form-admin-add" action="<{:url('foreign/edit')}>" method="post">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="c-red">*</span>名称：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" autocomplete="off" placeholder="" id="areaname" name="areaname" value="<{$ent.areaname}>">
+                <input type="hidden" name="id" value="<{$ent.id}>"/>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="c-red">*</span>上一级：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+                <select name="firstcode" id="" class="select">
+                    <option value="0">无上一级</option>
+                    <{volist name='firsts' id='vo'}>
+                    <option value="<{$vo.code}>" <{eq name='$vo.code' value='$ent->firstcode'}>selected='selected'<{/eq}>><{$vo.areaname}></option>
+                    <{/volist}>
+                </select>
+                </span> </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+</article>
+<{include file='public/_footer' /}>
+</body>
+
+</html>

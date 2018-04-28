@@ -68,6 +68,8 @@ Route::get('api/area/getprovin','api/area/getProvins');
 Route::get('api/area/getcity','api/area/getCitys');
 Route::get('api/area/getarea','api/area/getAreas');
 Route::get('api/area/getcode','api/area/getCode');
+Route::get('api/area/getforeignfirst','api/foreign/getFirst');
+Route::get('api/area/getforeignsecond','api/foreign/getSecond');
 
 // 新闻
 Route::post('api/:ver/news/tui','api/:ver.news/indextui'); // 首页推荐专线
