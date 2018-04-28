@@ -45,7 +45,7 @@ class Sellmsg extends Base
                 $contactsArr[$c->id] = $c->toArray();
             }
         }
-        return $this->fetch('',['sellmsgs'=>$sellmsgs,'condition'=>$condition,'contacts'=>$contactsArr,'selltypes'=>config('sellmsg.selltypes')]);
+        return $this->fetch('',['sellmsgs'=>$sellmsgs,'condition'=>$condition,'contacts'=>$contactsArr,'sellmsgcats'=>config('sellmsg.sellmsgcats')]);
     }
 
     /**

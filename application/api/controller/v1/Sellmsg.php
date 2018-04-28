@@ -15,7 +15,7 @@ class Sellmsg extends Common {
             if(empty($data['catname'])) {
                 return show(config('code.error'), 'sorry, param error', [], 400);
             }
-            $cats = config('sellmsg.sellmsg_flip');
+            $cats = config('sellmsg.sellmsgcats_flip');
             $data['cat'] = $cats[$data['catname']];
 
             // 判断图片至少一张
