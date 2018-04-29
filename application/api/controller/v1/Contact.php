@@ -74,10 +74,38 @@ class Contact extends Common {
             return show(config('code.error'), 'openid get error.', [], 500);
         }
         if (!empty($contact)) {
-            $contact->cats = array_keys(config('zhuanxian.cat_flip')); // 专线类型
+            // $contact->cats = array_keys(config('zhuanxian.cat_flip')); // 专线类型
             return show(config('code.success'), 'OK', $contact, 200);
         } else {
             return show(config('code.error'), 'openid get user is not exist.', [], 401);
+        }
+    }
+
+    /**
+     * 根据OPENID获取用户信息，带有专线
+     */
+    public function detailByOpenid2() {
+        $data = input('post.');
+        if (empty($data['openid'])) {
+            return show(config('code.error'), 'no openid', [], 401);
+        }
+
+        $openid = $data['openid'];
+        $whereCond = ['status'=>['EQ',config('code.status_normal')]];
+        try {
+            $contact = model('contact')->getByOpenid($openid, $whereCond);
+            $contact = model('contact')->getRealContact($contact);
+            // sleep(2);
+        } catch(\Exception $e) {
+            return show(config('code.error'), 'openid get error.', [], 500);
+        }
+        if (!empty($contact)) {
+            $limit = 5;
+            $zhuanxians = model('zhuanxian')->getZhuanxiansByCid($contact['id'], $limit);
+            $contact->zhuanxians = $zhuanxians;
+            return show(config('code.success'), 'OK', $contact, 200);
+        } else {
+            return show(config('code.error'), 'oid get user is not exist.', [], 401);
         }
     }
 

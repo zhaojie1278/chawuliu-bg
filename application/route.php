@@ -43,6 +43,7 @@ Route::post('api/:ver/zhaopin/detail','api/:ver.zhaopin/detailById');
 Route::post('api/:ver/contact/favcompany','api/:ver.contact/favcompany'); // 收藏公司信息
 Route::post('api/:ver/contact/isregcompany','api/:ver.contact/detailbyopenid'); // 详情
 Route::post('api/:ver/contact/companyinfo','api/:ver.contact/detailbyopenid'); // 详情
+Route::post('api/:ver/contact/contactinfo','api/:ver.contact/detailByOpenid2'); // 详情，带有专线
 Route::post('api/:ver/contact/addcompany','api/:ver.contact/addcompany'); // 添加公司信息
 Route::post('api/:ver/contact/updatecompany','api/:ver.contact/updatecompany'); // 修改公司信息
 Route::post('api/:ver/contact/getallzx','api/:ver.zhuanxian/getallbyopenid'); // 根据openid获取用户所有专线

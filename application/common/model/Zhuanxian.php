@@ -28,12 +28,16 @@ class Zhuanxian extends Base {
     /**
      * 根据联系人查询专线信息
      */
-    public function getZhuanxiansByCid($cid = 0) {
+    public function getZhuanxiansByCid($cid = 0, $limit = 0) {
         $whereCond = [
             'cid'=>['EQ',$cid],
             'status'=>['EQ',config('code.status_normal')]
         ];
-        $data = $this->where($whereCond)->order('update_time','desc')->select();
+        if ($limit) {
+            $data = $this->where($whereCond)->order('update_time','desc')->limit($limit)->select();
+        } else {
+            $data = $this->where($whereCond)->order('update_time','desc')->select();
+        }
         return $data;
     }
 
