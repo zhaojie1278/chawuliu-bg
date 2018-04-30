@@ -53,8 +53,10 @@ class Area extends Model {
      */
     public function getCode() {
         $data = input('get.');
+        $data['areaname'] = str_replace('市', '', $data['areaname']);
+        $data['areaname'] = str_replace('地区', '', $data['areaname']);
         $where = [
-            'areaname' => $data['areaname']
+            'areaname' => ['LIKE', $data['areaname'].'%']
         ];
         $areaCat = $data['areacat'];
         if ($areaCat == 'province') {
