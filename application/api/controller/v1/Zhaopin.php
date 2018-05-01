@@ -23,6 +23,14 @@ class Zhaopin extends Common {
                 return show(config('code.error'), '请上传至少一张图片', [], 400);
             } */
 
+            foreach($data as $k=>$v) {
+                if ($v == '请选择') {
+                    $data[$k] = '';
+                    // dump($v);
+                }
+            }
+            // dump($data['sex']);
+
             // halt($data['cat']);
             if (empty($data['id'])) {
                 // 添加
