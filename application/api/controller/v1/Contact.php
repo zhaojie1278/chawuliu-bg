@@ -4,6 +4,8 @@ namespace app\api\controller\v1;
 use app\common\lib\exception\ApiException;
 use app\common\lib\Aes;
 use app\api\controller\Common;
+use think\Log;
+use think\Db;
 
 class Contact extends Common {
     /**
@@ -124,6 +126,7 @@ class Contact extends Common {
         // 正常的用户
         $whereCond = ['status'=>['EQ',config('code.status_normal')]];
 
+        $ivContact = 0;
         // 邀请人openid
         if (!empty($data['fromooid'])) {
             // 获取ID
@@ -139,6 +142,9 @@ class Contact extends Common {
         }
 
         try {
+            if (!empty($ivContact)) {
+                Db::startTrans();
+            }
             // 判断openid是否已存在
             $openid = $data['openid'];
             $contact = model('contact')->getByOpenid($openid, $whereCond);
@@ -146,7 +152,26 @@ class Contact extends Common {
                 return show(config('code.error'), '此用户已存在，添加失败', [], 400);
             }
             $rs = model('contact')->add($data);
+
+            // 邀请处理
+            if (!empty($ivContact)) {
+                $ivdata = array(
+                    'uid'=>$rs,
+                    'nickname'=>$data['nickname'],
+                    'iv_uid'=>$ivContact->id,
+                    'iv_nickname'=>$ivContact->nickname
+                );
+                $rsYaoqing = model('common/Yaoqing')->add($ivdata);
+                array_walk($ivdata, function(&$v,$k) {
+                    $v = "$k=>$v;";
+                });
+                Log::record('Company Add Yaoqing add '.(implode('', $ivdata)).' -->> res '.($rsYaoqing ? 'suc':'fail'));
+            }
+            // 提交事务
+            Db::commit();
         } catch(\Exceptioin $e) {
+            // 回滚事务
+            Db::rollback();
             return show(config('code.error'), $e->getMessage(), [], 500);
         }
         if (!$rs) {
