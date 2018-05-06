@@ -45,8 +45,29 @@ class Area extends Controller {
      * @return json
      */
     public function getCitys() {
-        $provinces = model('area')->getCitysByCode();
-        return show(config('code.success'), 'ok', $provinces, 200);
+        $citys = model('area')->getCitysByCode();
+        if (!empty($citys)) {
+            $cCodes = array();
+            foreach($citys as $p) {
+                $cCodes[] = $p['code'];
+            }
+            // $cCodestr = implode(',', $cCodes);
+            $areas = model('area')->getAreasByCodes($cCodes);
+            if ($areas) {
+                $areasKeyArr = array();
+                foreach($areas as $a) {
+                    $aCityCode = $a['citycode'];
+                    $areasKeyArr[$aCityCode][] = $a;
+                }
+
+                foreach($citys as &$c) {
+                    if (array_key_exists($c['code'], $areasKeyArr)) {
+                        $c['areas'] = $areasKeyArr[$c['code']];
+                    }
+                }
+            }
+        }
+        return show(config('code.success'), 'ok', $citys, 200);
     }
 
     /**

@@ -35,7 +35,7 @@ class Area extends Model {
     }
 
     /**
-     * 根据省获取市
+     * 根据市获取到区和县
      * @return array
      */
     public function getAreasByCode() {
@@ -44,6 +44,14 @@ class Area extends Model {
             'citycode' => $data['code']
         ];
         $citys = Db::name('area')->where($where)->field('areaname,code')->select();
+        return $citys;
+    }
+    public function getAreasByCodes($cityCodes = '') {
+        
+        $where = [
+            'citycode' => array('IN', $cityCodes)
+        ];
+        $citys = Db::name('area')->where($where)->field('areaname,code,citycode')->select();
         return $citys;
     }
 
