@@ -4,7 +4,7 @@ namespace app\api\controller;
 use think\Controller;
 
 /**
- * 微信权限相关信息:openid等
+ * 国外地区获取
  */
 class Foreign extends Controller {
 

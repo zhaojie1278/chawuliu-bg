@@ -38,7 +38,58 @@ class Zhuanxian extends Base {
         } else {
             $data = $this->where($whereCond)->order('update_time','desc')->select();
         }
+
+        if ($data) {
+            $data = $this->getShowZx($data);
+        }
         return $data;
+    }
+
+    // 补全在客户端展示的 start point 值
+    public function getShowZxSingle($data) {
+        if (!empty($data['start'])) {
+        } else if (!empty($data['start_city'])) {
+            $data['start'] = $data['start_city'];
+        } else if (!empty($data['start_prov'])) {
+            $data['start'] = $data['start_prov'];
+        } else {
+            $data = false; // 过滤不正常数据
+        }
+        if ($data) {
+            if (!empty($data['point'])) {
+            } else if (!empty($data['point_city'])) {
+                $data['point'] = $data['point_city'];
+            } else if (!empty($data['point_prov'])) {
+                $data['point'] = $data['point_prov'];
+            } else {
+                $data = false; // 过滤不正常数据
+            }
+        }
+        return $data;
+    }
+    public function getShowZx($data) {
+        $newData = [];
+        foreach($data as $k=>$v) {
+            if (!empty($v['start'])) {
+            } else if (!empty($v['start_city'])) {
+                $v['start'] = $v['start_city'];
+            } else if (!empty($v['start_prov'])) {
+                $v['start'] = $v['start_prov'];
+            } else {
+                continue; // 过滤不正常数据
+            }
+
+            if (!empty($v['point'])) {
+            } else if (!empty($v['point_city'])) {
+                $v['point'] = $v['point_city'];
+            } else if (!empty($v['point_prov'])) {
+                $v['point'] = $v['point_prov'];
+            } else {
+                continue; // 过滤不正常数据
+            }
+            $newData[$k] = $v;
+        }
+        return $newData;
     }
 
     /**
@@ -82,7 +133,7 @@ class Zhuanxian extends Base {
         }
         $order = ['istop'=>'DESC', 'create_time'=>'DESC'];
         // $zhuanxians = $this->field('id,start,point,cid,nickname,phone,address')->where($where)->group('cid')->order($order)->limit($from, $size)->select();
-        $zhuanxians = $this->field('id,start,point,cid,nickname,phone,address')->where($where)->order($order)->select();
+        $zhuanxians = $this->field('id,start_prov,start_city,start,point_prov,point_city,point,cid,nickname,phone,address')->where($where)->order($order)->select();
         // echo $this->getLastSql();
         $realZhuanxians = $this->getRealZhuanxians($zhuanxians);
         return $realZhuanxians;
@@ -103,7 +154,7 @@ class Zhuanxian extends Base {
         $order = ['istop'=>'DESC', 'create_time'=>'DESC'];
         // echo $this->getLastSql();
         // $zhuanxians = $this->field('id,start,point,cid,nickname,phone,address')->where($condition)->order($order)->limit($from, $size)->select();
-        $zhuanxians = $this->field('id,start,point,cid,nickname,phone,address')->where($condition)->order($order)->select();
+        $zhuanxians = $this->field('id,start_prov,start_city,start,point_prov,point_city,point,cid,nickname,phone,address')->where($condition)->order($order)->select();
         // echo $this->getLastSql();
         $realZhuanxians = $this->getRealZhuanxians($zhuanxians);
         return $realZhuanxians;
@@ -135,21 +186,25 @@ class Zhuanxian extends Base {
 
         $resultData = [];
         foreach ($zhuanxians as $zx) {
-            $image = !empty($contactNames[$zx->cid]) ? model('contact')->getShowImg($contactNames[$zx->cid]) : '';
-            $resultData[] = [
-                'id' => $zx['id'],
-                'start' => $zx['start'],
-                'point' => $zx['point'],
-                'cid' => $zx['cid'],
-                'nickname' => $zx['nickname'],
-                'phone' => $zx['phone'],
-                'address' => $zx['address'],
-                'company' => !empty($contactNames[$zx->cid]) ? $contactNames[$zx->cid]->company : '',
-                // 'nickname' => !empty($contactNames[$zx->cid]) ? $contactNames[$zx->cid]->nickname : '',
-                // 'phone' => !empty($contactNames[$zx->cid]) ? $contactNames[$zx->cid]->phone : '',
-                // 'address' => !empty($contactNames[$zx->cid]) ? $contactNames[$zx->cid]->address : '',
-                'image' => $image ? request()->domain().$image : '',
-            ];
+            // dump($zx->toArray());
+            $zx = $this->getShowZxSingle($zx);
+            if ($zx) {
+                $image = !empty($contactNames[$zx->cid]) ? model('contact')->getShowImg($contactNames[$zx->cid]) : '';
+                $resultData[] = [
+                    'id' => $zx['id'],
+                    'start' => $zx['start'],
+                    'point' => $zx['point'],
+                    'cid' => $zx['cid'],
+                    'nickname' => $zx['nickname'],
+                    'phone' => $zx['phone'],
+                    'address' => $zx['address'],
+                    'company' => !empty($contactNames[$zx->cid]) ? $contactNames[$zx->cid]->company : '',
+                    // 'nickname' => !empty($contactNames[$zx->cid]) ? $contactNames[$zx->cid]->nickname : '',
+                    // 'phone' => !empty($contactNames[$zx->cid]) ? $contactNames[$zx->cid]->phone : '',
+                    // 'address' => !empty($contactNames[$zx->cid]) ? $contactNames[$zx->cid]->address : '',
+                    'image' => $image ? request()->domain().$image : '',
+                ];
+            }
         }
         return $resultData;
     }

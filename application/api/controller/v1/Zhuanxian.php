@@ -26,41 +26,108 @@ class Zhuanxian extends Common {
             $cats = config('zhuanxian.cat_flip');
             $data['cat'] = $cats[$data['catname']];
             // halt($data['cat']);
+            $data = $this->zhuanxianAddArea($data);
             if (empty($data['id'])) {
                 unset($data['id']);
                 $allList = array();
-                $allList[] = $data;
+                // $allList[] = $data;
 
                 // 配载吊车处理多个目的地
-                if (!empty($data['point2'])) {
-                    $point2 = $data['point2'];
-                    $data['point'] = $point2;
-                    $data['point_prov'] = $data['point_prov2'];
-
+                if (!empty($data['point_prov']) || !empty($data['point_city']) || !empty($data['point_area'])) {
+                    if (!empty($data['point_prov'])) {
+                        $data['point_prov'] = $data['point_prov'];
+                    } else {
+                        unset($data['point_prov']);
+                    }
+                    if (!empty($data['point_city'])) {
+                        $data['point_city'] = $data['point_city'];
+                    } else {
+                        unset($data['point_city']);
+                    }
+                    if (!empty($data['point_area'])) {
+                        $data['point'] = $data['point_area'];
+                    } else {
+                        unset($data['point']);
+                    }
                     $allList[] = $data;
                 }
-                if (!empty($data['point3'])) {
-                    $point3 = $data['point3'];
-                    $data['point'] = $point3;
-                    $data['point_prov'] = $data['point_prov3'];
+                if (!empty($data['point_prov2']) || !empty($data['point_city2']) || !empty($data['point_area2'])) {
+                    if (!empty($data['point_prov2'])) {
+                        $data['point_prov'] = $data['point_prov2'];
+                    } else {
+                        unset($data['point_prov']);
+                    }
+                    if (!empty($data['point_city2'])) {
+                        $data['point_city'] = $data['point_city2'];
+                    } else {
+                        unset($data['point_city']);
+                    }
+                    if (!empty($data['point_area2'])) {
+                        $data['point'] = $data['point_area2'];
+                    } else {
+                        unset($data['point']);
+                    }
                     $allList[] = $data;
                 }
-                if (!empty($data['point4'])) {
-                    $point4 = $data['point4'];
-                    $data['point'] = $point4;
-                    $data['point_prov'] = $data['point_prov4'];
+                if (!empty($data['point_prov3']) || !empty($data['point_city3']) || !empty($data['point_area3'])) {
+                    if (!empty($data['point_prov3'])) {
+                        $data['point_prov'] = $data['point_prov3'];
+                    } else {
+                        unset($data['point_prov']);
+                    }
+                    if (!empty($data['point_city3'])) {
+                        $data['point_city'] = $data['point_city3'];
+                    } else {
+                        unset($data['point_city']);
+                    }
+                    if (!empty($data['point_area3'])) {
+                        $data['point'] = $data['point_area3'];
+                    } else {
+                        unset($data['point']);
+                    }
                     $allList[] = $data;
                 }
-                if (!empty($data['point5'])) {
-                    $point5 = $data['point5'];
-                    $data['point'] = $point5;
-                    $data['point_prov'] = $data['point_prov5'];
+                if (!empty($data['point_prov4']) || !empty($data['point_city4']) || !empty($data['point_area4'])) {
+                    if (!empty($data['point_prov4'])) {
+                        $data['point_prov'] = $data['point_prov4'];
+                    } else {
+                        unset($data['point_prov']);
+                    }
+                    if (!empty($data['point_city4'])) {
+                        $data['point_city'] = $data['point_city4'];
+                    } else {
+                        unset($data['point_city']);
+                    }
+                    if (!empty($data['point_area4'])) {
+                        $data['point'] = $data['point_area4'];
+                    } else {
+                        unset($data['point']);
+                    }
+                    $allList[] = $data;
+                }
+                if (!empty($data['point_prov5']) || !empty($data['point_city5']) || !empty($data['point_area5'])) {
+                    if (!empty($data['point_prov5'])) {
+                        $data['point_prov'] = $data['point_prov5'];
+                    } else {
+                        unset($data['point_prov']);
+                    }
+                    if (!empty($data['point_city5'])) {
+                        $data['point_city'] = $data['point_city5'];
+                    } else {
+                        unset($data['point_city']);
+                    }
+                    if (!empty($data['point_area5'])) {
+                        $data['point'] = $data['point_area5'];
+                    } else {
+                        unset($data['point']);
+                    }
                     $allList[] = $data;
                 }
                 // 添加
                 $id = model('common/Zhuanxian')->addAll($allList);
             } else {
                 // 修改
+                // halt($data);
                 $id = model('common/Zhuanxian')->edit($data);
             }
         }catch (\Exception $e) {
@@ -99,13 +166,14 @@ class Zhuanxian extends Common {
     public function indexTui() {
         try {
             $data = input('post.');
-            if (!empty($data['start'])) {
+            /*if (!empty($data['start'])) {
                 $condition['start'] = $data['start'];
             }
             if (!empty($data['point'])) {
                 $condition['point'] = $data['point'];
-            }
+            }*/
 
+            $condition = $this->getZhuanxianAreaWhere($data);
             $total = model('zhuanxian')->getTuiZhuanxianCount($condition);
             $this->getPageAndSize(input('get.'));
             $tuis = model('zhuanxian')->getTuiZhuanxians($condition, $this->from, $this->size);
@@ -130,12 +198,12 @@ class Zhuanxian extends Common {
         $data = input('post.');
         // halt($data);
         $where['status'] = config('code.status_normal');
-        if (!empty($data['start'])) {
+        /*if (!empty($data['start'])) {
             $where['start'] = $data['start'];
         }
         if (!empty($data['point']) && $data['point'] != '请选择') {
             $where['point'] = $data['point'];
-        }
+        }*/
         /*
         if (!empty($data['start_prov'])) {
             $where['start_prov'] = $data['start_prov'];
@@ -143,11 +211,13 @@ class Zhuanxian extends Common {
         if (!empty($data['point_prov'])) {
             $where['point_prov'] = $data['point_prov'];
         }*/
+        $condition = $this->getZhuanxianAreaWhere($data);
         if (!empty($data['cat'])) {
             $where['cat'] = $data['cat'];
         } else {
             return show(config('code.error'), 'error param.', [], 400);
         }
+        $where = array_merge($where, $condition);
         $this->getPageAndSize($data);
         try {
             $total = model('zhuanxian')->getZhuanxiansCount($where);
@@ -200,7 +270,7 @@ class Zhuanxian extends Common {
         }
         $whereCond = ['status'=>['EQ',config('code.status_normal')], 'cid'=>$data['cid']];
         $result = model('zhuanxian')->getById($data['id'], $whereCond);
-        // $result = model('zhuanxian')->getRealZhuanxian($result);
+        // $result = model('zhuanxian')->getShowZx($result);
         return show(config('code.success'), 'OK', $result, 200);
     }
 }
