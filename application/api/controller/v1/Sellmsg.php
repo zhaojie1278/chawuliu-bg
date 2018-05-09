@@ -23,6 +23,8 @@ class Sellmsg extends Common {
                 return show(config('code.error'), '请上传至少一张图片', [], 400);
             } */
 
+            $data = $this->addAreaHandle($data);
+            
             foreach($data as $k=>$v) {
                 if ($v == '请选择') {
                     $data[$k] = '';
@@ -168,6 +170,7 @@ class Sellmsg extends Common {
         $whereCond = ['status'=>['EQ',config('code.status_normal')]];
         $data = model('sellmsg')->getById($data['id'], $whereCond);
         $data = model('sellmsg')->getRealDataSingle($data);
+        $data = model('sellmsg')->setShowQuyu($data);
         $result = model('sellmsg')->getImgSellmsg($data);
         return show(config('code.success'), 'OK', $result, 200);
     }

@@ -23,6 +23,8 @@ class Zhaopin extends Common {
                 return show(config('code.error'), '请上传至少一张图片', [], 400);
             } */
 
+            $data = $this->addAreaHandle($data);
+            
             foreach($data as $k=>$v) {
                 if ($v == '请选择') {
                     $data[$k] = '';
@@ -171,6 +173,7 @@ class Zhaopin extends Common {
         $whereCond = ['status'=>['EQ',config('code.status_normal')]];
         $data = model('zhaopin')->getById($data['id'], $whereCond);
         $data = model('zhaopin')->getRealDataSingle($data);
+        $data = model('zhaopin')->setShowQuyu($data);
         $result = model('zhaopin')->getImgZhaopin($data);
         return show(config('code.success'), 'OK', $result, 200);
     }

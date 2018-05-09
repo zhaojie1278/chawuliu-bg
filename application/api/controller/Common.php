@@ -305,4 +305,27 @@ class Common extends Controller {
         }
         return $where;
     }
+
+    /**
+     * 地区数据处理 - 买卖、招聘
+     * @param  array $data
+     * @return array
+     */
+    public function addAreaHandle($data) {
+        if (!empty($data['prov'])) {
+            $data['prov'] = str_replace('省', '', $data['prov']);
+            $data['prov'] = str_replace('市', '', $data['prov']);
+        }
+        if (!empty($data['city'])) {
+            $data['city'] = str_replace('市', '', $data['city']);
+            // $data['city'] = str_replace('区', '', $data['city']);
+            $data['city'] = str_replace('县', '', $data['city']);
+        }
+        if (!empty($data['area'])) {
+            $data['area'] = str_replace('市', '', $data['area']);
+            // $data['area'] = str_replace('区', '', $data['area']);
+            $data['area'] = str_replace('县', '', $data['area']);
+        }
+        return $data;
+    }
 }

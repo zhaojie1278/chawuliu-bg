@@ -34,6 +34,9 @@ class Sellmsg extends Base {
             'status'=>['EQ',config('code.status_normal')]
         ];
         $data = $this->where($whereCond)->order('update_time','desc')->select();
+        foreach($data as &$v) {
+            $v = $this->setShowQuyu($v);
+        }
         return $data;
     }
 
@@ -135,6 +138,21 @@ class Sellmsg extends Base {
             $resultData[] = $val;
         }
         return $resultData;
+    }
+
+
+    // 设置显示区域
+    public function setShowQuyu($data) {
+        if (!empty($data['area'])) {
+            $data['quyu'] = $data['area'];
+        } else if (!empty($data['city'])) {
+            $data['quyu'] = $data['city'];
+        } else if (!empty($data['prov'])) {
+            $data['quyu'] = $data['prov'];
+        } else {
+            $data = false; // 过滤不正常数据
+        }
+        return $data;
     }
 
     /**
