@@ -57,7 +57,7 @@ class Sellmsg extends Base {
      * API获取专线总条数
      */
     public function getSellmsgsCount($condition = [], $prov = '', $city = '') {
-        if (!empty($prov) && $prov == $city) {
+        /*if (!empty($prov) && $prov == $city) {
             $city = '';
         }
         if (!empty($prov) && !empty($city)) {
@@ -72,7 +72,8 @@ class Sellmsg extends Base {
             $count = $this->where($condition)->count();
         } else {
             $count = $this->where($condition)->count();            
-        }
+        }*/
+        $count = $this->where($condition)->count();  
         return $count;
     }
 
@@ -81,7 +82,7 @@ class Sellmsg extends Base {
      */
     public function getSellmsgsByPage($condition = [], $from = 0, $size = 10, $prov = '', $city = '') {
         $order = ['create_time'=>'DESC'];
-        if (!empty($prov) && $prov == $city) {
+        /*if (!empty($prov) && $prov == $city) {
             $city = '';
         }
         if (!empty($prov) && !empty($city)) {
@@ -96,7 +97,8 @@ class Sellmsg extends Base {
             $data = $this->where($condition)->order($order)->select();
         } else {
             $data = $this->where($condition)->order($order)->select();            
-        }
+        }*/
+        $data = $this->where($condition)->order($order)->select();
         // halt($this->getLastSql());
         $data = $this->getRealData($data);
         return $data;

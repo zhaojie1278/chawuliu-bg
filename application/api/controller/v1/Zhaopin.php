@@ -83,7 +83,7 @@ class Zhaopin extends Common {
         $prov = '';
         $city = '';
 
-        if (!empty($data['prov'])) {
+        /*if (!empty($data['prov'])) {
             // $where['address'] = ['LIKE', '%'.$data['prov'].'%'];
             $prov = $data['prov'];
 
@@ -91,25 +91,24 @@ class Zhaopin extends Common {
             $prov = str_replace('省', '', $prov);
         }
         if (!empty($data['city'])) {
-            /* if (!empty($data['prov'])) {
-                $where2['address'] = ['LIKE', '%'.$data['city'].'%'];
-            } else {
-                $where['address'] = ['LIKE', '%'.$data['city'].'%'];
-            } */
             $city = str_replace('市', '', $city);
             $city = str_replace('省', '', $city);
-        }
+        }*/
+
         if (!empty($data['cat'])) {
             $where['cat'] = $data['cat'];
         }
         if (!empty($data['worktype'])) {
             $where['worktype'] = $data['worktype'];
         }
+        $condition = $this->getAreaWhere($data);
+        $where = array_merge($where, $condition);
+
         $this->getPageAndSize($data);
         try {
-            $total = model('zhaopin')->getZhaopinsCount($where, $prov, $city);
+            $total = model('zhaopin')->getZhaopinsCount($where);
             // halt(model('zhaopin')->getLastSql());
-            $zhaopins = model('zhaopin')->getZhaopinsByPage($where, $this->from, $this->size, $prov, $city);
+            $zhaopins = model('zhaopin')->getZhaopinsByPage($where, $this->from, $this->size);
         } catch (\Exception $e) {
             return show(config('code.error'), $e->getMessage(), [], 400);
         }

@@ -81,7 +81,7 @@ class Sellmsg extends Common {
         $prov = '';
         $city = '';
 
-        if (!empty($data['prov'])) {
+        /*if (!empty($data['prov'])) {
             // $where['address'] = ['LIKE', '%'.$data['prov'].'%'];
             $prov = $data['prov'];
 
@@ -89,24 +89,20 @@ class Sellmsg extends Common {
             $prov = str_replace('省', '', $prov);
         }
         if (!empty($data['city'])) {
-            /* if (!empty($data['prov'])) {
-                $where2['address'] = ['LIKE', '%'.$data['city'].'%'];
-            } else {
-                $where['address'] = ['LIKE', '%'.$data['city'].'%'];
-            } */
             $city = $data['city'];
-
             $city = str_replace('市', '', $city);
             $city = str_replace('省', '', $city);
-        }
+        }*/
         if (!empty($data['cat'])) {
             $where['cat'] = $data['cat'];
         }
+        $condition = $this->getAreaWhere($data);
+        $where = array_merge($where, $condition);
         $this->getPageAndSize($data);
         try {
-            $total = model('sellmsg')->getSellmsgsCount($where, $prov, $city);
+            $total = model('sellmsg')->getSellmsgsCount($where);
             // halt(model('sellmsg')->getLastSql());
-            $sellmsgs = model('sellmsg')->getSellmsgsByPage($where, $this->from, $this->size, $prov, $city);
+            $sellmsgs = model('sellmsg')->getSellmsgsByPage($where, $this->from, $this->size);
         } catch (\Exception $e) {
             return show(config('code.error'), $e->getMessage(), [], 400);
         }
