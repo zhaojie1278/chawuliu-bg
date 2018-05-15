@@ -99,7 +99,11 @@ class Zhaopin extends Common {
             $where['cat'] = $data['cat'];
         }
         if (!empty($data['worktype'])) {
-            $where['worktype'] = $data['worktype'];
+            if (stripos($data['worktype'], ',') != false) {
+                $where['worktype'] = array('IN', explode(',', $data['worktype']));
+            } else {
+                $where['worktype'] = $data['worktype'];
+            }
         }
         $condition = $this->getAreaWhere($data);
         $where = array_merge($where, $condition);
