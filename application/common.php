@@ -10,7 +10,13 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
-
+function setFilePathRandTimeStr() {
+    $rand = rand(100000,999999);
+    // date('Ymd') . DS . md5(microtime(true))
+    list($t1, $t2) = explode(' ', microtime());
+    // return date('YmdHi') . DS . md5($t2.ceil($t1 * 1000).$rand);
+    return md5(date('YmdHi').$t2.ceil($t1 * 1000).$rand);
+}
 
 /**
  * 通用化API接口输出

@@ -61,7 +61,9 @@ Route::post('api/:ver/fav/getfavors','api/:ver.fav/getFavorsByCid'); // 获取�
 Route::post('api/getopenid','api/waferauth/getopenid');
 
 // 上传
-Route::post('api/upload','api/image/upload');
+Route::post('api/upload/image','api/image/upload');
+Route::post('api/upload/record','api/record/upload');
+// Route::get('api/upload/recognize','api/record/recognize');
 
 // 地区
 Route::get('api/area','api/area/getarea');
