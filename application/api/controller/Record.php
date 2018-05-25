@@ -54,7 +54,8 @@ class Record extends Controller
                     $strArr = explode('到', $rsRecogStr);
                     if (count($strArr) > 1) {
                         $rsRecogArr['start'] = str_ireplace('从','',$strArr[0]);
-                        $rsRecogArr['end'] = $strArr[1];
+                        $rsRecogArr['end'] = str_ireplace('，','',$strArr[1]);
+                        $rsRecogArr['end'] = str_ireplace('。','',$rsRecogArr['end']);
                     } else {
                         $rsRecogArr = 0;
                     }

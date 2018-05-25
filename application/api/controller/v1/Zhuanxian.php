@@ -26,7 +26,7 @@ class Zhuanxian extends Common {
             $cats = config('zhuanxian.cat_flip');
             $data['cat'] = $cats[$data['catname']];
             // halt($data['cat']);
-            $data = $this->zhuanxianAddArea($data);
+            // $data = $this->zhuanxianAddArea($data);
             if (empty($data['id'])) {
                 unset($data['id']);
                 $allList = array();

@@ -242,38 +242,34 @@ class Common extends Controller {
      */
     public function getZhuanxianAreaWhere($data) {
         $where = [];
-        if (!empty($data['start_prov'])) {
-            $data['start_prov'] = str_replace('省', '', $data['start_prov']);
-            $data['start_prov'] = str_replace('市', '', $data['start_prov']);
+        if (!empty($data['start_prov']) && false === stripos($data['start_prov'], '辖区') && false === stripos($data['start_prov'], '辖县')) {
+            // $data['start_prov'] = str_replace('省', '', $data['start_prov']);
+            // $data['start_prov'] = str_replace('市', '', $data['start_prov']);
             $where['start_prov'] = $data['start_prov'];
         }
-        if (!empty($data['start_city'])) {
-            $data['start_city'] = str_replace('市', '', $data['start_city']);
-            // $data['start_city'] = str_replace('区', '', $data['start_city']);
-            $data['start_city'] = str_replace('县', '', $data['start_city']);
+        if (!empty($data['start_city']) && false === stripos($data['start_city'], '辖区') && false === stripos($data['start_city'], '辖县')) {
+            // $data['start_city'] = str_replace('市', '', $data['start_city']);
+            // $data['start_city'] = str_replace('县', '', $data['start_city']);
             $where['start_city'] = $data['start_city'];
         }
-        if (!empty($data['start_area'])) {
-            $data['start_area'] = str_replace('市', '', $data['start_area']);
-            // $data['start_area'] = str_replace('区', '', $data['start_area']);
-            $data['start_area'] = str_replace('县', '', $data['start_area']);
+        if (!empty($data['start_area']) && false === stripos($data['start_area'], '辖区') && false === stripos($data['start_area'], '辖县')) {
+            // $data['start_area'] = str_replace('市', '', $data['start_area']);
+            // $data['start_area'] = str_replace('县', '', $data['start_area']);
             $where['start'] = $data['start_area'];
         }
-        if (!empty($data['point_prov'])) {
-            $data['point_prov'] = str_replace('省', '', $data['point_prov']);
-            $data['point_prov'] = str_replace('市', '', $data['point_prov']);
+        if (!empty($data['point_prov']) && false === stripos($data['point_prov'], '辖区') && false === stripos($data['point_prov'], '辖县')) {
+            // $data['point_prov'] = str_replace('省', '', $data['point_prov']);
+            // $data['point_prov'] = str_replace('市', '', $data['point_prov']);
             $where['point_prov'] = $data['point_prov'];
         }
-        if (!empty($data['point_city'])) {
-            $data['point_city'] = str_replace('市', '', $data['point_city']);
-            // $data['point_city'] = str_replace('区', '', $data['point_city']);
-            $data['point_city'] = str_replace('县', '', $data['point_city']);
+        if (!empty($data['point_city']) && false === stripos($data['point_city'], '辖区') && false === stripos($data['point_city'], '辖县')) {
+            // $data['point_city'] = str_replace('市', '', $data['point_city']);
+            // $data['point_city'] = str_replace('县', '', $data['point_city']);
             $where['point_city'] = $data['point_city'];
         }
-        if (!empty($data['point_area'])) {
-            $data['point_area'] = str_replace('市', '', $data['point_area']);
-            // $data['point_area'] = str_replace('区', '', $data['point_area']);
-            $data['point_area'] = str_replace('县', '', $data['point_area']);
+        if (!empty($data['point_area']) && false === stripos($data['point_area'], '辖区') && false === stripos($data['point_area'], '辖县')) {
+            // $data['point_area'] = str_replace('市', '', $data['point_area']);
+            // $data['point_area'] = str_replace('县', '', $data['point_area']);
             $where['point'] = $data['point_area'];
         }
         return $where;
@@ -286,21 +282,19 @@ class Common extends Controller {
      */
     public function getAreaWhere($data) {
         $where = [];
-        if (!empty($data['prov'])) {
-            $data['prov'] = str_replace('省', '', $data['prov']);
-            $data['prov'] = str_replace('市', '', $data['prov']);
+        if (!empty($data['prov']) && false === stripos($data['prov'], '辖区') && false === stripos($data['prov'], '辖县')) {
+            // $data['prov'] = str_replace('省', '', $data['prov']);
+            // $data['prov'] = str_replace('市', '', $data['prov']);
             $where['prov'] = $data['prov'];
         }
-        if (!empty($data['city'])) {
-            $data['city'] = str_replace('市', '', $data['city']);
-            // $data['city'] = str_replace('区', '', $data['city']);
-            $data['city'] = str_replace('县', '', $data['city']);
+        if (!empty($data['city']) && false === stripos($data['city'], '辖区') && false === stripos($data['city'], '辖县')) {
+            // $data['city'] = str_replace('市', '', $data['city']);
+            // $data['city'] = str_replace('县', '', $data['city']);
             $where['city'] = $data['city'];
         }
-        if (!empty($data['area'])) {
-            $data['area'] = str_replace('市', '', $data['area']);
-            // $data['area'] = str_replace('区', '', $data['area']);
-            $data['area'] = str_replace('县', '', $data['area']);
+        if (!empty($data['area']) && false === stripos($data['area'], '辖区') && false === stripos($data['area'], '辖县')) {
+            // $data['area'] = str_replace('市', '', $data['area']);
+            // $data['area'] = str_replace('县', '', $data['area']);
             $where['area'] = $data['area'];
         }
         return $where;
