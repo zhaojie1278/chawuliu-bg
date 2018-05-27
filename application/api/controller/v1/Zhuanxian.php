@@ -31,96 +31,128 @@ class Zhuanxian extends Common {
                 unset($data['id']);
                 $allList = array();
                 // $allList[] = $data;
-
+                if (!empty($data['start_prov']) || !empty($data['start_city']) || !empty($data['start_area'])) {
+                    $data['start_country'] = $data['start_prov'].$data['start_city'].$data['start_area'];
+                }
                 // 配载吊车处理多个目的地
                 if (!empty($data['point_prov']) || !empty($data['point_city']) || !empty($data['point_area'])) {
+                    $pointCountry = '';
                     if (!empty($data['point_prov'])) {
                         $data['point_prov'] = $data['point_prov'];
+                        $pointCountry = $pointCountry . $data['point_prov'];
                     } else {
                         unset($data['point_prov']);
                     }
                     if (!empty($data['point_city'])) {
                         $data['point_city'] = $data['point_city'];
+                        $pointCountry = $pointCountry . $data['point_city'];
+
                     } else {
                         unset($data['point_city']);
                     }
                     if (!empty($data['point_area'])) {
                         $data['point'] = $data['point_area'];
+                        $pointCountry = $pointCountry . $data['point'];
                     } else {
                         unset($data['point']);
                     }
+                    $data['point_country'] = $pointCountry;
                     $allList[] = $data;
                 }
                 if (!empty($data['point_prov2']) || !empty($data['point_city2']) || !empty($data['point_area2'])) {
+                    $pointCountry = '';
                     if (!empty($data['point_prov2'])) {
                         $data['point_prov'] = $data['point_prov2'];
+                        $pointCountry = $pointCountry . $data['point_prov'];
                     } else {
                         unset($data['point_prov']);
                     }
                     if (!empty($data['point_city2'])) {
                         $data['point_city'] = $data['point_city2'];
+                        $pointCountry = $pointCountry . $data['point_city'];
                     } else {
                         unset($data['point_city']);
                     }
                     if (!empty($data['point_area2'])) {
                         $data['point'] = $data['point_area2'];
+                        $pointCountry = $pointCountry . $data['point'];
                     } else {
                         unset($data['point']);
                     }
+                    $data['point_country'] = $pointCountry;
+
                     $allList[] = $data;
                 }
                 if (!empty($data['point_prov3']) || !empty($data['point_city3']) || !empty($data['point_area3'])) {
+                    $pointCountry = '';
                     if (!empty($data['point_prov3'])) {
                         $data['point_prov'] = $data['point_prov3'];
+                        $pointCountry = $pointCountry . $data['point_prov'];
                     } else {
                         unset($data['point_prov']);
                     }
                     if (!empty($data['point_city3'])) {
                         $data['point_city'] = $data['point_city3'];
+                        $pointCountry = $pointCountry . $data['point_city'];
                     } else {
                         unset($data['point_city']);
                     }
                     if (!empty($data['point_area3'])) {
                         $data['point'] = $data['point_area3'];
+                        $pointCountry = $pointCountry . $data['point'];
                     } else {
                         unset($data['point']);
                     }
+                    $data['point_country'] = $pointCountry;
+
                     $allList[] = $data;
                 }
                 if (!empty($data['point_prov4']) || !empty($data['point_city4']) || !empty($data['point_area4'])) {
+                    $pointCountry = '';
                     if (!empty($data['point_prov4'])) {
                         $data['point_prov'] = $data['point_prov4'];
+                        $pointCountry = $pointCountry . $data['point_prov'];
                     } else {
                         unset($data['point_prov']);
                     }
                     if (!empty($data['point_city4'])) {
                         $data['point_city'] = $data['point_city4'];
+                        $pointCountry = $pointCountry . $data['point_city'];
                     } else {
                         unset($data['point_city']);
                     }
                     if (!empty($data['point_area4'])) {
                         $data['point'] = $data['point_area4'];
+                        $pointCountry = $pointCountry . $data['point'];
                     } else {
                         unset($data['point']);
                     }
+                    $data['point_country'] = $pointCountry;
+
                     $allList[] = $data;
                 }
                 if (!empty($data['point_prov5']) || !empty($data['point_city5']) || !empty($data['point_area5'])) {
+                    $pointCountry = '';
                     if (!empty($data['point_prov5'])) {
                         $data['point_prov'] = $data['point_prov5'];
+                        $pointCountry = $pointCountry . $data['point_prov'];
                     } else {
                         unset($data['point_prov']);
                     }
                     if (!empty($data['point_city5'])) {
                         $data['point_city'] = $data['point_city5'];
+                        $pointCountry = $pointCountry . $data['point_city'];
                     } else {
                         unset($data['point_city']);
                     }
                     if (!empty($data['point_area5'])) {
                         $data['point'] = $data['point_area5'];
+                        $pointCountry = $pointCountry . $data['point'];
                     } else {
                         unset($data['point']);
                     }
+                    $data['point_country'] = $pointCountry;
+
                     $allList[] = $data;
                 }
                 // 添加

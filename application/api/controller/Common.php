@@ -104,6 +104,12 @@ class Common extends Controller {
         $this->from = ($this->page - 1) * $this->size;
     }
 
+    // 拼装地区信息：包含省市区
+    public function getZhuanxianCountry($prov, $city, $area) {
+        $country = $prov.$city.$area;
+        return $country;
+    }
+
     /**
      * 地区数据处理 - 专线
      * @param  [type] $data [description]
@@ -318,50 +324,66 @@ class Common extends Controller {
      */
     public function getZhuanxianAreaWhere($data) {
         $where = [];
-        if (!empty($data['start_prov']) && false === stripos($data['start_prov'], '辖区') && false === stripos($data['start_prov'], '辖县')) {
-                if (mb_strlen($data['start_prov'],'utf-8') > 2) {
-                    $data['start_prov'] = preg_replace('/(.*)省/u','$1', $data['start_prov']);
-                    $data['start_prov'] = preg_replace('/(.*)市/u','$1', $data['start_prov']);
-                }
-                $where['start_prov'] = $data['start_prov'];
+        if (!empty($data['start_record'])) {
+            $data['start_record'] = preg_replace('/省/u','$1', $data['start_record']);
+            $data['start_record'] = preg_replace('/市/u','$1', $data['start_record']);
+            $data['start_record'] = preg_replace('/区/u','$1', $data['start_record']);
+            // 录音查询
+            $where['start_country'] = ['LIKE','%'.$data['start_record'].'%'];;
+        } else {
+            if (!empty($data['start_prov']) && false === stripos($data['start_prov'], '辖区') && false === stripos($data['start_prov'], '辖县')) {
+                    if (mb_strlen($data['start_prov'],'utf-8') > 2) {
+                        $data['start_prov'] = preg_replace('/(.*)省/u','$1', $data['start_prov']);
+                        $data['start_prov'] = preg_replace('/(.*)市/u','$1', $data['start_prov']);
+                    }
+                    $where['start_prov'] = $data['start_prov'];
+            }
+            if (!empty($data['start_city']) && false === stripos($data['start_city'], '辖区') && false === stripos($data['start_city'], '辖县')) {
+                    if (mb_strlen($data['start_city'],'utf-8') > 2) {
+                        $data['start_city'] = preg_replace('/(.*)市/u','$1', $data['start_city']);
+                        $data['start_city'] = preg_replace('/(.*)县/u','$1', $data['start_city']);
+                    }
+                $where['start_city'] = $data['start_city'];
+            }
+            if (!empty($data['start_area']) && false === stripos($data['start_area'], '辖区') && false === stripos($data['start_area'], '辖县')) {
+                    if (mb_strlen($data['start_area'],'utf-8') > 2) {
+                        $data['start_area'] = preg_replace('/(.*)市/u','$1', $data['start_area']);
+                        $data['start_area'] = preg_replace('/(.*)县/u','$1', $data['start_area']);
+                    }
+                // $where['start'] = $data['start_area'];
+                $where['start'] = ['LIKE',$data['start_area'].'%'];
+            }
         }
-        if (!empty($data['start_city']) && false === stripos($data['start_city'], '辖区') && false === stripos($data['start_city'], '辖县')) {
-                if (mb_strlen($data['start_city'],'utf-8') > 2) {
-                    $data['start_city'] = preg_replace('/(.*)市/u','$1', $data['start_city']);
-                    $data['start_city'] = preg_replace('/(.*)县/u','$1', $data['start_city']);
-                }
-            $where['start_city'] = $data['start_city'];
-        }
-        if (!empty($data['start_area']) && false === stripos($data['start_area'], '辖区') && false === stripos($data['start_area'], '辖县')) {
-                if (mb_strlen($data['start_area'],'utf-8') > 2) {
-                    $data['start_area'] = preg_replace('/(.*)市/u','$1', $data['start_area']);
-                    $data['start_area'] = preg_replace('/(.*)县/u','$1', $data['start_area']);
-                }
-            // $where['start'] = $data['start_area'];
-            $where['start'] = ['LIKE',$data['start_area'].'%'];
-        }
-        if (!empty($data['point_prov']) && false === stripos($data['point_prov'], '辖区') && false === stripos($data['point_prov'], '辖县')) {
-                if (mb_strlen($data['point_prov'],'utf-8') > 2) {
-                    $data['point_prov'] = preg_replace('/(.*)省/u','$1', $data['point_prov']);
-                    $data['point_prov'] = preg_replace('/(.*)市/u','$1', $data['point_prov']);
-                }
-            $where['point_prov'] = $data['point_prov'];
-        }
-        if (!empty($data['point_city']) && false === stripos($data['point_city'], '辖区') && false === stripos($data['point_city'], '辖县')) {
-                if (mb_strlen($data['point_city'],'utf-8') > 2) {
-                    $data['point_city'] = preg_replace('/(.*)市/u','$1', $data['point_city']);
-                    $data['point_city'] = preg_replace('/(.*)县/u','$1', $data['point_city']);
-                }
-            // $where['point_city'] = $data['point_city'];
-            $where['point_city'] = ['LIKE',$data['point_city'].'%'];
-        }
-        if (!empty($data['point_area']) && false === stripos($data['point_area'], '辖区') && false === stripos($data['point_area'], '辖县')) {
-                if (mb_strlen($data['point_area'],'utf-8') > 2) {
-                    $data['point_area'] = preg_replace('/(.*)市/u','$1', $data['point_area']);
-                    $data['point_area'] = preg_replace('/(.*)县/u','$1', $data['point_area']);
-                }
-            // $where['point'] = $data['point_area'];
-            $where['point'] = ['LIKE',$data['point_area'].'%'];
+        if (!empty($data['point_record'])) {
+            $data['point_record'] = preg_replace('/省/u','$1', $data['point_record']);
+            $data['point_record'] = preg_replace('/市/u','$1', $data['point_record']);
+            $data['point_record'] = preg_replace('/区/u','$1', $data['point_record']);
+            // 录音查询
+            $where['point_country'] = ['LIKE','%'.$data['point_record'].'%'];;
+        } else {
+            if (!empty($data['point_prov']) && false === stripos($data['point_prov'], '辖区') && false === stripos($data['point_prov'], '辖县')) {
+                    if (mb_strlen($data['point_prov'],'utf-8') > 2) {
+                        $data['point_prov'] = preg_replace('/(.*)省/u','$1', $data['point_prov']);
+                        $data['point_prov'] = preg_replace('/(.*)市/u','$1', $data['point_prov']);
+                    }
+                $where['point_prov'] = $data['point_prov'];
+            }
+            if (!empty($data['point_city']) && false === stripos($data['point_city'], '辖区') && false === stripos($data['point_city'], '辖县')) {
+                    if (mb_strlen($data['point_city'],'utf-8') > 2) {
+                        $data['point_city'] = preg_replace('/(.*)市/u','$1', $data['point_city']);
+                        $data['point_city'] = preg_replace('/(.*)县/u','$1', $data['point_city']);
+                    }
+                // $where['point_city'] = $data['point_city'];
+                $where['point_city'] = ['LIKE',$data['point_city'].'%'];
+            }
+            if (!empty($data['point_area']) && false === stripos($data['point_area'], '辖区') && false === stripos($data['point_area'], '辖县')) {
+                    if (mb_strlen($data['point_area'],'utf-8') > 2) {
+                        $data['point_area'] = preg_replace('/(.*)市/u','$1', $data['point_area']);
+                        $data['point_area'] = preg_replace('/(.*)县/u','$1', $data['point_area']);
+                    }
+                // $where['point'] = $data['point_area'];
+                $where['point'] = ['LIKE',$data['point_area'].'%'];
+            }
         }
         return $where;
     }
