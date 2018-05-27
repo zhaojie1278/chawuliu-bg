@@ -26,7 +26,7 @@ class Zhuanxian extends Common {
             $cats = config('zhuanxian.cat_flip');
             $data['cat'] = $cats[$data['catname']];
             // halt($data['cat']);
-            // $data = $this->zhuanxianAddArea($data);
+            $data = $this->zhuanxianAddArea($data);
             if (empty($data['id'])) {
                 unset($data['id']);
                 $allList = array();
@@ -126,6 +126,11 @@ class Zhuanxian extends Common {
                 // 添加
                 $id = model('common/Zhuanxian')->addAll($allList);
             } else {
+                if (!empty($data['point_area'])) {
+                    $data['point'] = $data['point_area'];
+                } else {
+                    $data['point'] = '';
+                }
                 // 修改
                 // halt($data);
                 $id = model('common/Zhuanxian')->edit($data);

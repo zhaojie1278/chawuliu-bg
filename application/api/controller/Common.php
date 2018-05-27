@@ -111,124 +111,200 @@ class Common extends Controller {
      */
     public function zhuanxianAddArea($data) {
         if (!empty($data['start_prov'])) {
-            $data['start_prov'] = str_replace('省', '', $data['start_prov']);
-            $data['start_prov'] = str_replace('市', '', $data['start_prov']);
+            // $data['point_area2'] = str_replace('区', '', $data['point_area2']);
+            if (mb_strlen($data['start_prov'],'utf-8') > 2) {
+                $data['start_prov'] = preg_replace('/(.*)省/u','$1', $data['start_prov']);
+                $data['start_prov'] = preg_replace('/(.*)市/u','$1', $data['start_prov']);
+            }
         } else {
             $data['start_prov'] = '';
         }
         if (!empty($data['start_city'])) {
-            $data['start_city'] = str_replace('市', '', $data['start_city']);
-            // $data['start_city'] = str_replace('区', '', $data['start_city']);
-            $data['start_city'] = str_replace('县', '', $data['start_city']);
+            if (stripos($data['start_city'], '辖区') !== false || stripos($data['start_city'], '辖县') !== false) {
+                $data['start_city'] = '';
+            } else {
+                if (mb_strlen($data['start_city'],'utf-8') > 2) {
+                    // $data['start_city'] = preg_replace('/(.*)市/u','$1', $data['start_city']);
+                    $data['start_city'] = preg_replace('/(.*)市/u','$1',$data['start_city']);
+                    $data['start_city'] = preg_replace('/(.*)县/u','$1',$data['start_city']);                
+                }
+            }
         } else {
             $data['start_city'] = '';
         }
         if (!empty($data['start_area'])) {
-            $data['start_area'] = str_replace('市', '', $data['start_area']);
-            // $data['start_area'] = str_replace('区', '', $data['start_area']);
-            $data['start_area'] = str_replace('县', '', $data['start_area']);
+            if (stripos($data['start_area'], '辖区') !== false || stripos($data['start_area'], '辖县') !== false) {
+                $data['start_area'] = '';
+            } else {
+                if (mb_strlen($data['start_area'],'utf-8') > 2) {
+                    $data['start_area'] = preg_replace('/(.*)市/u','$1',$data['start_area']);
+                    $data['start_area'] = preg_replace('/(.*)区/u','$1',$data['start_area']);
+                }
+            }
             $data['start'] = $data['start_area'];
         } else {
             $data['start'] = '';
         }
         if (!empty($data['point_prov'])) {
-            $data['point_prov'] = str_replace('省', '', $data['point_prov']);
-            $data['point_prov'] = str_replace('市', '', $data['point_prov']);
+            if (mb_strlen($data['point_prov'],'utf-8') > 2) {
+                $data['point_prov'] = preg_replace('/(.*)省/u','$1',$data['point_prov']);
+                $data['point_prov'] = preg_replace('/(.*)市/u','$1',$data['point_prov']);
+            }
         } else {
             $data['point_prov'] = '';
         }
         if (!empty($data['point_city'])) {
-            $data['point_city'] = str_replace('市', '', $data['point_city']);
-            // $data['point_city'] = str_replace('区', '', $data['point_city']);
-            $data['point_city'] = str_replace('县', '', $data['point_city']);
+            if (stripos($data['point_city'], '辖区') !== false || stripos($data['point_city'], '辖县') !== false) {
+                $data['point_city'] = '';
+            } else {
+                if (mb_strlen($data['point_city'],'utf-8') > 2) {
+                    $data['point_city'] = preg_replace('/(.*)市/u','$1',$data['point_city']);
+                    $data['point_city'] = preg_replace('/(.*)县/u','$1',$data['point_city']);
+                }
+            }
         } else {
             $data['point_city'] = '';
         }
         if (!empty($data['point_area'])) {
-            $data['point_area'] = str_replace('市', '', $data['point_area']);
-            // $data['point_area'] = str_replace('区', '', $data['point_area']);
-            $data['point_area'] = str_replace('县', '', $data['point_area']);
-            $data['point'] = $data['point_area'];
+            if (stripos($data['point_area'], '辖区') !== false || stripos($data['point_area'], '辖县') !== false) {
+                $data['point_area'] = '';
+            } else {
+                if (mb_strlen($data['point_area'],'utf-8') > 2) {
+                    $data['point_area'] = preg_replace('/(.*)市/u','$1',$data['point_area']);
+                    $data['point_area'] = preg_replace('/(.*)区/u','$1',$data['point_area']);
+                }
+            }
         } else {
-            $data['point'] = '';
+            $data['point_area'] = '';
         }
         if (!empty($data['point_prov2'])) {
-            $data['point_prov2'] = str_replace('省', '', $data['point_prov2']);
-            $data['point_prov2'] = str_replace('市', '', $data['point_prov2']);
+                if (mb_strlen($data['point_prov2'],'utf-8') > 2) {
+                    $data['point_prov2'] = preg_replace('/(.*)省/u','$1', $data['point_prov2']);
+                    $data['point_prov2'] = preg_replace('/(.*)市/u','$1', $data['point_prov2']);
+                }
         } else {
             $data['point_prov2'] = '';
         }
         if (!empty($data['point_city2'])) {
-            $data['point_city2'] = str_replace('市', '', $data['point_city2']);
-            // $data['point_city2'] = str_replace('区', '', $data['point_city2']);
-            $data['point_city2'] = str_replace('县', '', $data['point_city2']);
+            if (stripos($data['point_city2'], '辖区') !== false || stripos($data['point_city2'], '辖县') !== false) {
+                $data['point_city2'] = '';
+            } else {
+                if (mb_strlen($data['point_city2'],'utf-8') > 2) {
+                    $data['point_city2'] = preg_replace('/(.*)市/u','$1', $data['point_city2']);
+                    $data['point_city2'] = preg_replace('/(.*)县/u','$1', $data['point_city2']);
+                }
+            }
         } else {
             $data['point_city2'] = '';
         }
         if (!empty($data['point_area2'])) {
-            $data['point_area2'] = str_replace('市', '', $data['point_area2']);
-            // $data['point_area2'] = str_replace('区', '', $data['point_area2']);
-            $data['point_area2'] = str_replace('县', '', $data['point_area2']);
+            if (stripos($data['point_area2'], '辖区') !== false || stripos($data['point_area2'], '辖县') !== false) {
+                $data['point_area2'] = '';
+            } else {
+                if (mb_strlen($data['point_area2'],'utf-8') > 2) {
+                    $data['point_area2'] = preg_replace('/(.*)市/u','$1', $data['point_area2']);
+                    $data['point_area2'] = preg_replace('/(.*)区/u','$1', $data['point_area2']);
+                }
+            }
         } else {
             $data['point_area2'] = '';
         }
         if (!empty($data['point_prov3'])) {
-            $data['point_prov3'] = str_replace('省', '', $data['point_prov3']);
-            $data['point_prov3'] = str_replace('市', '', $data['point_prov3']);
+                if (mb_strlen($data['point_prov3'],'utf-8') > 2) {
+                    $data['point_prov3'] = preg_replace('/(.*)省/u','$1', $data['point_prov3']);
+                    $data['point_prov3'] = preg_replace('/(.*)市/u','$1', $data['point_prov3']);
+                }
         } else {
             $data['point_prov3'] = '';
         }
         if (!empty($data['point_city3'])) {
-            $data['point_city3'] = str_replace('市', '', $data['point_city3']);
-            // $data['point_city3'] = str_replace('区', '', $data['point_city3']);
-            $data['point_city3'] = str_replace('县', '', $data['point_city3']);
+            if (stripos($data['point_city3'], '辖区') !== false || stripos($data['point_city3'], '辖县') !== false) {
+                $data['point_city3'] = '';
+            } else {
+                if (mb_strlen($data['point_city3'],'utf-8') > 2) {
+                    $data['point_city3'] = preg_replace('/(.*)市/u','$1', $data['point_city3']);
+                    $data['point_city3'] = preg_replace('/(.*)县/u','$1', $data['point_city3']);
+                }
+            }
         } else {
             $data['point_city3'] = '';
         }
         if (!empty($data['point_area3'])) {
-            $data['point_area3'] = str_replace('市', '', $data['point_area3']);
-            // $data['point_area3'] = str_replace('区', '', $data['point_area3']);
-            $data['point_area3'] = str_replace('县', '', $data['point_area3']);
+            if (stripos($data['point_area3'], '辖区') !== false || stripos($data['point_area3'], '辖县') !== false) {
+                $data['point_area3'] = '';
+            } else {
+                if (mb_strlen($data['point_area3'],'utf-8') > 2) {
+                    $data['point_area3'] = preg_replace('/(.*)市/u','$1', $data['point_area3']);
+                    $data['point_area3'] = preg_replace('/(.*)区/u','$1', $data['point_area3']);
+                }
+            }
         } else {
             $data['point_area3'] = '';
         }
         if (!empty($data['point_prov4'])) {
-            $data['point_prov4'] = str_replace('省', '', $data['point_prov4']);
-            $data['point_prov4'] = str_replace('市', '', $data['point_prov4']);
+                if (mb_strlen($data['point_prov4'],'utf-8') > 2) {
+                    $data['point_prov4'] = preg_replace('/(.*)省/u','$1', $data['point_prov4']);
+                    $data['point_prov4'] = preg_replace('/(.*)市/u','$1', $data['point_prov4']);
+                }
         } else {
             $data['point_prov4'] = '';
         }
         if (!empty($data['point_city4'])) {
-            $data['point_city4'] = str_replace('市', '', $data['point_city4']);
-            // $data['point_city4'] = str_replace('区', '', $data['point_city4']);
-            $data['point_city4'] = str_replace('县', '', $data['point_city4']);
+            if (stripos($data['point_city4'], '辖区') !== false || stripos($data['point_city4'], '辖县') !== false) {
+                $data['point_city4'] = '';
+            } else {
+                if (mb_strlen($data['point_city4'],'utf-8') > 2) {
+                    $data['point_city4'] = preg_replace('/(.*)市/u','$1', $data['point_city4']);
+                    $data['point_city4'] = preg_replace('/(.*)县/u','$1', $data['point_city4']);
+                }
+            }
         } else {
             $data['point_city4'] = '';
         }
         if (!empty($data['point_area4'])) {
-            $data['point_area4'] = str_replace('市', '', $data['point_area4']);
-            // $data['point_area4'] = str_replace('区', '', $data['point_area4']);
-            $data['point_area4'] = str_replace('县', '', $data['point_area4']);
+            if (stripos($data['point_area4'], '辖区') !== false || stripos($data['point_area4'], '辖县') !== false) {
+                $data['point_area4'] = '';
+            } else {
+                if (mb_strlen($data['point_area4'],'utf-8') > 2) {
+                    $data['point_area4'] = preg_replace('/(.*)市/u','$1', $data['point_area4']);
+                    $data['point_area4'] = preg_replace('/(.*)区/u','$1', $data['point_area4']);
+                }
+            }
         } else {
             $data['point_area4'] = '';
         }
         if (!empty($data['point_prov5'])) {
-            $data['point_prov5'] = str_replace('省', '', $data['point_prov5']);
-            $data['point_prov5'] = str_replace('市', '', $data['point_prov5']);
+                if (mb_strlen($data['point_prov5'],'utf-8') > 2) {
+                    $data['point_prov5'] = preg_replace('/(.*)省/u','$1', $data['point_prov5']);
+                    $data['point_prov5'] = preg_replace('/(.*)市/u','$1', $data['point_prov5']);
+                }
         } else {
             $data['point_prov5'] = '';
         }
         if (!empty($data['point_city5'])) {
-            $data['point_city5'] = str_replace('市', '', $data['point_city5']);
-            // $data['point_city5'] = str_replace('区', '', $data['point_city5']);
-            $data['point_city5'] = str_replace('县', '', $data['point_city5']);
+            if (stripos($data['point_city5'], '辖区') !== false || stripos($data['point_city5'], '辖县') !== false) {
+                $data['point_city5'] = '';
+            } else {
+                if (mb_strlen($data['point_city5'],'utf-8') > 2) {
+                    $data['point_city5'] = preg_replace('/(.*)市/u','$1', $data['point_city5']);
+                    $data['point_city5'] = preg_replace('/(.*)县/u','$1', $data['point_city5']);
+                }
+            }
+
         } else {
             $data['point_city5'] = '';
         }
         if (!empty($data['point_area5'])) {
-            $data['point_area5'] = str_replace('市', '', $data['point_area5']);
-            // $data['point_area5'] = str_replace('区', '', $data['point_area5']);
-            $data['point_area5'] = str_replace('县', '', $data['point_area5']);
+            if (stripos($data['point_area5'], '辖区') !== false || stripos($data['point_area5'], '辖县') !== false) {
+                $data['point_area5'] = '';
+            } else {
+                if (mb_strlen($data['point_area5'],'utf-8') > 2) {
+                    $data['point_area5'] = preg_replace('/(.*)市/u','$1', $data['point_area5']);
+                    $data['point_area5'] = preg_replace('/(.*)区/u','$1', $data['point_area5']);
+                }
+            }
+            
+            // $data['point_area5'] = preg_replace('/(.*)县/u','$1', $data['point_area5']);
         } else {
             $data['point_area5'] = '';
         }
@@ -243,34 +319,49 @@ class Common extends Controller {
     public function getZhuanxianAreaWhere($data) {
         $where = [];
         if (!empty($data['start_prov']) && false === stripos($data['start_prov'], '辖区') && false === stripos($data['start_prov'], '辖县')) {
-            // $data['start_prov'] = str_replace('省', '', $data['start_prov']);
-            // $data['start_prov'] = str_replace('市', '', $data['start_prov']);
-            $where['start_prov'] = $data['start_prov'];
+                if (mb_strlen($data['start_prov'],'utf-8') > 2) {
+                    $data['start_prov'] = preg_replace('/(.*)省/u','$1', $data['start_prov']);
+                    $data['start_prov'] = preg_replace('/(.*)市/u','$1', $data['start_prov']);
+                }
+                $where['start_prov'] = $data['start_prov'];
         }
         if (!empty($data['start_city']) && false === stripos($data['start_city'], '辖区') && false === stripos($data['start_city'], '辖县')) {
-            // $data['start_city'] = str_replace('市', '', $data['start_city']);
-            // $data['start_city'] = str_replace('县', '', $data['start_city']);
+                if (mb_strlen($data['start_city'],'utf-8') > 2) {
+                    $data['start_city'] = preg_replace('/(.*)市/u','$1', $data['start_city']);
+                    $data['start_city'] = preg_replace('/(.*)县/u','$1', $data['start_city']);
+                }
             $where['start_city'] = $data['start_city'];
         }
         if (!empty($data['start_area']) && false === stripos($data['start_area'], '辖区') && false === stripos($data['start_area'], '辖县')) {
-            // $data['start_area'] = str_replace('市', '', $data['start_area']);
-            // $data['start_area'] = str_replace('县', '', $data['start_area']);
-            $where['start'] = $data['start_area'];
+                if (mb_strlen($data['start_area'],'utf-8') > 2) {
+                    $data['start_area'] = preg_replace('/(.*)市/u','$1', $data['start_area']);
+                    $data['start_area'] = preg_replace('/(.*)县/u','$1', $data['start_area']);
+                }
+            // $where['start'] = $data['start_area'];
+            $where['start'] = ['LIKE',$data['start_area'].'%'];
         }
         if (!empty($data['point_prov']) && false === stripos($data['point_prov'], '辖区') && false === stripos($data['point_prov'], '辖县')) {
-            // $data['point_prov'] = str_replace('省', '', $data['point_prov']);
-            // $data['point_prov'] = str_replace('市', '', $data['point_prov']);
+                if (mb_strlen($data['point_prov'],'utf-8') > 2) {
+                    $data['point_prov'] = preg_replace('/(.*)省/u','$1', $data['point_prov']);
+                    $data['point_prov'] = preg_replace('/(.*)市/u','$1', $data['point_prov']);
+                }
             $where['point_prov'] = $data['point_prov'];
         }
         if (!empty($data['point_city']) && false === stripos($data['point_city'], '辖区') && false === stripos($data['point_city'], '辖县')) {
-            // $data['point_city'] = str_replace('市', '', $data['point_city']);
-            // $data['point_city'] = str_replace('县', '', $data['point_city']);
-            $where['point_city'] = $data['point_city'];
+                if (mb_strlen($data['point_city'],'utf-8') > 2) {
+                    $data['point_city'] = preg_replace('/(.*)市/u','$1', $data['point_city']);
+                    $data['point_city'] = preg_replace('/(.*)县/u','$1', $data['point_city']);
+                }
+            // $where['point_city'] = $data['point_city'];
+            $where['point_city'] = ['LIKE',$data['point_city'].'%'];
         }
         if (!empty($data['point_area']) && false === stripos($data['point_area'], '辖区') && false === stripos($data['point_area'], '辖县')) {
-            // $data['point_area'] = str_replace('市', '', $data['point_area']);
-            // $data['point_area'] = str_replace('县', '', $data['point_area']);
-            $where['point'] = $data['point_area'];
+                if (mb_strlen($data['point_area'],'utf-8') > 2) {
+                    $data['point_area'] = preg_replace('/(.*)市/u','$1', $data['point_area']);
+                    $data['point_area'] = preg_replace('/(.*)县/u','$1', $data['point_area']);
+                }
+            // $where['point'] = $data['point_area'];
+            $where['point'] = ['LIKE',$data['point_area'].'%'];
         }
         return $where;
     }
@@ -283,19 +374,27 @@ class Common extends Controller {
     public function getAreaWhere($data) {
         $where = [];
         if (!empty($data['prov']) && false === stripos($data['prov'], '辖区') && false === stripos($data['prov'], '辖县')) {
-            // $data['prov'] = str_replace('省', '', $data['prov']);
-            // $data['prov'] = str_replace('市', '', $data['prov']);
+                if (mb_strlen($data['prov'],'utf-8') > 2) {
+                    $data['prov'] = preg_replace('/(.*)省/u','$1', $data['prov']);
+                    $data['prov'] = preg_replace('/(.*)市/u','$1', $data['prov']);
+                }
             $where['prov'] = $data['prov'];
         }
         if (!empty($data['city']) && false === stripos($data['city'], '辖区') && false === stripos($data['city'], '辖县')) {
-            // $data['city'] = str_replace('市', '', $data['city']);
-            // $data['city'] = str_replace('县', '', $data['city']);
-            $where['city'] = $data['city'];
+                if (mb_strlen($data['city'],'utf-8') > 2) {
+                    $data['city'] = preg_replace('/(.*)市/u','$1', $data['city']);
+                    $data['city'] = preg_replace('/(.*)县/u','$1', $data['city']);
+                }
+            // $where['city'] = $data['city'];
+            $where['city'] = ['LIKE',$data['city'].'%'];
         }
         if (!empty($data['area']) && false === stripos($data['area'], '辖区') && false === stripos($data['area'], '辖县')) {
-            // $data['area'] = str_replace('市', '', $data['area']);
-            // $data['area'] = str_replace('县', '', $data['area']);
-            $where['area'] = $data['area'];
+                if (mb_strlen($data['area'],'utf-8') > 2) {
+                    $data['area'] = preg_replace('/(.*)市/u','$1', $data['area']);
+                    $data['area'] = preg_replace('/(.*)县/u','$1', $data['area']);
+                }
+            // $where['area'] = $data['area'];
+            $where['area'] = ['LIKE',$data['area'].'%'];
         }
         return $where;
     }
@@ -307,18 +406,31 @@ class Common extends Controller {
      */
     public function addAreaHandle($data) {
         if (!empty($data['prov'])) {
-            $data['prov'] = str_replace('省', '', $data['prov']);
-            $data['prov'] = str_replace('市', '', $data['prov']);
+                if (mb_strlen($data['prov'],'utf-8') > 2) {
+                    $data['prov'] = preg_replace('/(.*)省/u','$1', $data['prov']);
+                    $data['prov'] = preg_replace('/(.*)市/u','$1', $data['prov']);
+                }
         }
         if (!empty($data['city'])) {
-            $data['city'] = str_replace('市', '', $data['city']);
-            // $data['city'] = str_replace('区', '', $data['city']);
-            $data['city'] = str_replace('县', '', $data['city']);
+            if (stripos($data['city'], '辖区') !== false || stripos($data['city'], '辖县') !== false) {
+                $data['city'] = '';
+            } else {
+                if (mb_strlen($data['city'],'utf-8') > 2) {
+                    $data['city'] = preg_replace('/(.*)市/u','$1', $data['city']);
+                    $data['city'] = preg_replace('/(.*)县/u','$1', $data['city']);
+                }
+            }
         }
         if (!empty($data['area'])) {
-            $data['area'] = str_replace('市', '', $data['area']);
-            // $data['area'] = str_replace('区', '', $data['area']);
-            $data['area'] = str_replace('县', '', $data['area']);
+            if (stripos($data['area'], '辖区') !== false || stripos($data['area'], '辖县') !== false) {
+                $data['area'] = '';
+            } else {
+                // $data['area'] = preg_replace('/(.*)市/u','$1', $data['area']);
+                if (mb_strlen($data['area'],'utf-8') > 2) {
+                    $data['area'] = preg_replace('/(.*)区/u','$1', $data['area']);
+                    $data['area'] = preg_replace('/(.*)县/u','$1', $data['area']);
+                }
+            }
         }
         return $data;
     }
