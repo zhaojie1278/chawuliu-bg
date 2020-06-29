@@ -1,4 +1,5 @@
-ThinkPHP 5.0
+基于 ThinkPHP 5.0 开发
+查物流后台管理系统
 ===============
 
 [![Total Downloads](https://poser.pugx.org/topthink/think/downloads)](https://packagist.org/packages/topthink/think)
