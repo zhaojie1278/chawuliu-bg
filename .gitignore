@@ -5,3 +5,4 @@ thinkphp
 public/uploads
 *.zip
 muke-demo
+.vscode
